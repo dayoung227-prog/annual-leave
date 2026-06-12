@@ -1,0 +1,25 @@
+create table employees (
+  sabun text primary key,
+  name text not null,
+  dept text,
+  rank text,
+  join_date text,
+  generated numeric default 0,
+  used_existing numeric default 0,
+  remaining numeric default 0
+);
+
+create table submissions (
+  sabun text primary key,
+  name text,
+  dept text,
+  rank text,
+  join_date text,
+  generated numeric,
+  used_existing numeric,
+  remaining numeric,
+  selections jsonb,
+  total_selected numeric,
+  signature text,
+  submitted_at timestamptz default now()
+);
