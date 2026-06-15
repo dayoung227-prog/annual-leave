@@ -169,6 +169,13 @@ function totalSel(sel) {
 // ═══════════════════════
 // 직원 화면
 // ═══════════════════════
+// 공휴일 목록 (YYYY-MM-DD)
+var HOLIDAYS = [
+  '2026-07-17','2026-08-17','2026-09-24','2026-09-25',
+  '2026-10-09','2026-10-05','2026-12-05'
+];
+function isHoliday(ds){ return HOLIDAYS.indexOf(ds) !== -1; }
+
 var CE=null, CS={}, SD=null, CY=2026, CM=6, PD=null, sigOk=false;
 
 function renderAuth() {
@@ -259,11 +266,15 @@ function drawCal() {
   for(var d=1;d<=days;d++){
     var dow=new Date(CY,CM,d).getDay(), wk=dow===0||dow===6;
     var ds=CY+'-'+String(CM+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    var holiday=isHoliday(ds);
+    var disabled=wk||holiday;
     var v=CS[ds];
     var tag=v?'<span class="day-tag" style="background:'+tc(v)+';">'+tl(v)+'</span>':'';
-    var click=wk?'':' onclick="openPop(\''+ds+'\',event)"';
-    h+='<div class="day'+(wk?' wknd':'')+(v?' sel':'')+'"'+click+'>'+
-      '<span class="day-num" style="color:'+(wk?'#9ca3af':v?'#1e40af':'#374151')+';font-weight:'+(v?700:400)+';">'+d+'</span>'+tag+'</div>';
+    var hTag=holiday?'<span style="font-size:9px;color:#D7005A;">휴</span>':'';
+    var click=disabled?'':' onclick="openPop(\''+ds+'\',event)"';
+    h+='<div class="day'+(disabled?' wknd':'')+(v?' sel':'')+'"'+click+'>'+
+      '<span class="day-num" style="color:'+(disabled?'#9ca3af':v?'#1e40af':'#374151')+';font-weight:'+(v?700:400)+';">'+d+'</span>'+
+      (holiday?hTag:tag)+'</div>';
   }
   gr.innerHTML=h;
 }
