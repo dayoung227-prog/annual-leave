@@ -330,7 +330,12 @@ function initSig(){
   c.onmouseup=c.onmouseleave=c.ontouchend=function(e){ e.preventDefault(); drawing=false; SD=c.toDataURL(); sigOk=true; };
 }
 function clearSig(){ var c=g('sig-c'); if(c){ c.getContext('2d').clearRect(0,0,c.width,c.height); SD=null; sigOk=false; } }
-function goConfirm(){ if(!sigOk||!SD){ alert('서명을 먼저 해주세요.'); return; } renderConfirm(); }
+function goConfirm(){
+  var checked = document.getElementById('agree-check');
+  if(!checked || !checked.checked){ alert('전자서명 동의 체크박스를 확인해주세요.'); return; }
+  if(!sigOk||!SD){ alert('서명을 먼저 해주세요.'); return; }
+  renderConfirm();
+}
 function renderConfirm(){
   var used=totalSel(CS), byM={};
   Object.entries(CS).sort(function(a,b){ return a[0].localeCompare(b[0]); }).forEach(function(kv){
