@@ -2,522 +2,620 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>연차촉진 시스템</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>미사용 연차 사용 시기지정 통보 - ㈜에이텍컴퓨터</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Noto Sans KR',sans-serif;background:#f3f4f6;min-height:100vh}
-.wrap{max-width:480px;margin:0 auto;padding:16px}
-.card{background:#fff;border-radius:12px;padding:20px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
-h2{font-size:18px;font-weight:700;margin-bottom:16px;color:#111}
-h3{font-size:15px;font-weight:600;color:#111}
-.field{margin-bottom:12px}
-label{display:block;font-size:13px;color:#6b7280;margin-bottom:4px}
-input[type=text],input[type=password]{width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:14px}
-.btn{display:block;width:100%;padding:12px;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px}
-.btn-blue{background:#2563eb;color:#fff}
-.btn-blue:hover{background:#1d4ed8}
-.btn-red{background:#ef4444;color:#fff}
-.btn-gray{background:#e5e7eb;color:#374151}
-.btn-sm{padding:6px 12px;font-size:13px;border:none;border-radius:6px;cursor:pointer;background:#e5e7eb;color:#374151}
-.btn-block{display:block;width:100%}
-.info-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f3f4f6;font-size:14px}
-.info-row:last-child{border-bottom:none}
-.info-label{color:#6b7280}
-.info-value{font-weight:600;color:#111}
-.badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600}
-.badge-green{background:#d1fae5;color:#065f46}
-.badge-yellow{background:#fef9c3;color:#854d0e}
-.badge-gray{background:#f3f4f6;color:#6b7280}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-top:8px}
-.cal-head{text-align:center;font-size:11px;font-weight:600;color:#6b7280;padding:4px 0}
-.cal-day{text-align:center;padding:6px 2px;border-radius:6px;font-size:13px;cursor:pointer;position:relative;user-select:none}
-.cal-day.today{font-weight:700;color:#2563eb}
-.cal-day.disabled{color:#d1d5db;cursor:default}
-.cal-day.weekend{color:#ef4444}
-.cal-day.holiday{color:#ef4444}
-.cal-day.selected-1{background:#dbeafe}
-.cal-day.selected-05{background:#ede9fe}
-.cal-day.selected-025{background:#fce7f3}
-.cal-day .sel-label{font-size:9px;display:block;color:#2563eb;font-weight:700}
-.remain-bar{background:#f3f4f6;border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
-.remain-bar span{font-size:13px;color:#6b7280}
-.remain-bar strong{font-size:16px;color:#2563eb}
-.month-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.month-nav button{background:none;border:1px solid #d1d5db;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:14px}
-.month-nav span{font-size:15px;font-weight:600}
-.type-sel{display:flex;gap:6px;margin-top:6px}
-.type-sel button{flex:1;padding:6px;border:1px solid #d1d5db;border-radius:6px;font-size:12px;cursor:pointer;background:#fff}
-.type-sel button.active{background:#2563eb;color:#fff;border-color:#2563eb}
-.sig-canvas{border:1.5px solid #d1d5db;border-radius:8px;width:100%;height:120px;touch-action:none;display:block;background:#fafafa}
-.agree-row{display:flex;align-items:flex-start;gap:8px;margin:12px 0;background:#f0fdf4;border-radius:8px;padding:10px 12px}
-.agree-row input[type=checkbox]{width:18px;height:18px;cursor:pointer;flex-shrink:0;margin-top:2px}
-.agree-row label{font-size:13px;color:#374151;line-height:1.5;cursor:pointer}
-.popup-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:100}
-.popup{background:#fff;border-radius:12px;padding:24px;max-width:360px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,.18)}
-.sel-summary{background:#f8fafc;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;line-height:1.8}
-/* 관리자 */
-.table-wrap{overflow-x:auto;margin-top:8px}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{background:#f3f4f6;padding:8px 6px;text-align:center;border-bottom:2px solid #e5e7eb;white-space:nowrap}
-td{padding:8px 6px;text-align:center;border-bottom:1px solid #f3f4f6;white-space:nowrap}
-tr:hover td{background:#f8fafc}
-.err{color:#ef4444;font-size:13px;margin-top:6px}
-.tab-bar{display:flex;gap:8px;margin-bottom:16px}
-.tab{padding:8px 18px;border:none;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;background:#e5e7eb;color:#374151}
-.tab.active{background:#2563eb;color:#fff}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans KR','Malgun Gothic',sans-serif;background:#f1f5f9;min-height:100vh;}
+.wrap{max-width:540px;margin:0 auto;padding:16px;}
+.wrap-wide{max-width:800px;margin:0 auto;padding:16px;}
+.card{background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08);padding:20px;margin-bottom:14px;}
+.btn{padding:10px 22px;border-radius:8px;border:none;cursor:pointer;font-weight:700;font-size:14px;font-family:inherit;}
+.btn-blue{background:#D7005A;color:#fff;}
+.btn-dark{background:#5A6670;color:#fff;}
+.btn-green{background:#8B7540;color:#fff;}
+.btn-gray{background:#e2e8f0;color:#5A6670;}
+.btn-red{background:#ef4444;color:#fff;}
+.btn-block{width:100%;display:block;}
+.btn-sm{padding:4px 12px;border-radius:6px;border:1px solid #e5e7eb;background:#f9fafb;cursor:pointer;font-size:12px;font-family:inherit;}
+.nav-btn{padding:4px 10px;border-radius:6px;border:1px solid #e5e7eb;background:#f9fafb;cursor:pointer;font-size:13px;}
+input[type=text],input[type=password],select{padding:8px 12px;border-radius:8px;border:1px solid #d1d5db;font-size:14px;width:100%;font-family:inherit;}
+.lbl{font-size:12px;color:#6b7280;display:block;margin-bottom:3px;margin-top:10px;}
+.err{color:#ef4444;font-size:13px;margin:6px 0;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.cell span{font-size:11px;color:#6b7280;display:block;}
+.cell b{font-size:13px;color:#1e293b;}
+table{width:100%;border-collapse:collapse;margin-bottom:10px;}
+th,td{border:1px solid #ccc;padding:6px 8px;font-size:12px;text-align:center;}
+th{background:#f0f0f0;font-weight:700;}
+.pth{background:#fde8ef;border-color:#f4a0bc;font-weight:700;}
+.ptd{background:#fff;border-color:#f4a0bc;color:#D7005A;font-weight:600;}
+.notice{background:#fff8f0;border-left:4px solid #8B7540;border-radius:8px;padding:14px;font-size:13px;line-height:1.8;margin-bottom:14px;}
+.law{background:#fef3e8;border-radius:6px;padding:10px 12px;font-size:11.5px;color:#6b4c1e;line-height:1.7;margin-top:10px;}
+.cal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:6px;}
+.dow{text-align:center;font-size:11px;font-weight:600;padding:3px 0;}
+.day{min-height:46px;border:1px solid #e5e7eb;border-radius:5px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;user-select:none;}
+.day.wknd{background:#f9fafb;cursor:default;}
+.day.sel{background:#eff6ff;}
+.day-num{font-size:12px;}
+.day-tag{font-size:9px;color:#fff;border-radius:3px;padding:1px 3px;margin-top:1px;}
+.popup{position:fixed;z-index:300;background:#fff;border:1px solid #e5e7eb;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.15);padding:8px;display:flex;flex-direction:column;gap:4px;min-width:140px;}
+.popup button{padding:7px 16px;border-radius:6px;border:none;cursor:pointer;font-size:13px;font-family:inherit;text-align:left;}
+.ov{position:fixed;inset:0;z-index:299;}
+.chip{background:#eff6ff;border:1px solid #bfdbfe;border-radius:4px;padding:2px 7px;font-size:11px;display:inline-block;margin:2px;}
+.sig-canvas{border:1.5px solid #d1d5db;border-radius:8px;touch-action:none;cursor:crosshair;background:#fafafa;display:block;}
+.legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+.ldot{width:10px;height:10px;border-radius:2px;display:inline-block;}
+.tabs{display:flex;gap:4px;margin-bottom:14px;}
+.badge{border-radius:4px;padding:2px 8px;font-size:11px;font-weight:700;}
+.bdone{background:#dcfce7;color:#166534;}
+.bwait{background:#fef9c3;color:#854d0e;}
+.page{display:none;}
+.page.active{display:block;}
+.top-bar{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-top:14px;}
+.loading{text-align:center;padding:40px;color:#6b7280;font-size:14px;}
+.year-badge{background:#1e293b;color:#fff;border-radius:6px;padding:3px 10px;font-size:13px;font-weight:700;}
 </style>
 </head>
 <body>
-<div class="wrap" id="app"></div>
+
+<div id="pg-home" class="page active">
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:14px;padding:24px;">
+    <div style="text-align:center;margin-bottom:8px;">
+      <div style="font-size:32px;margin-bottom:6px;">📅</div>
+      <h1 style="font-size:22px;font-weight:800;color:#D7005A;">미사용 연차 사용 시기지정 통보</h1>
+      <p style="color:#5A6670;font-size:13px;margin-top:6px;">㈜에이텍컴퓨터</p>
+    </div>
+    <button class="btn btn-blue" style="width:220px;padding:13px 0;" onclick="goEmp()">👤 직원 연차 신청</button>
+    <button class="btn btn-dark" style="width:220px;padding:13px 0;" onclick="goAdmin()">🔐 관리자 페이지</button>
+  </div>
+</div>
+
+<div id="pg-emp" class="page">
+  <div class="wrap">
+    <div class="top-bar">
+      <button class="btn-sm" onclick="goHome()">← 홈</button>
+      <h2 style="font-size:17px;font-weight:700;color:#5A6670;">연차 사용 촉진 신청</h2>
+    </div>
+    <div id="emp-body"></div>
+  </div>
+</div>
+
+<div id="pg-admin" class="page">
+  <div class="wrap-wide">
+    <div class="top-bar">
+      <button class="btn-sm" onclick="goHome()">← 홈</button>
+      <h2 style="font-size:17px;font-weight:700;color:#5A6670;">관리자 페이지</h2>
+      <span id="year-badge" class="year-badge" style="display:none;"></span>
+    </div>
+    <div id="admin-body"></div>
+  </div>
+</div>
 
 <script>
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  ★ Supabase 설정 (본인 값으로 교체)
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const SUPABASE_URL = "https://nzzcvigxakfhmyokjlse.supabase.co";
-const SUPABASE_KEY = "sb_publishable_Gu0FEbrSokrbaamsFbajIQ_6O91zhOF";
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+var SB_URL = 'https://nzzcvigxakfhmyokjlse.supabase.co';
+var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56emN2aWd4YWtmaG15b2tqbHNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyNDIyNzYsImV4cCI6MjA5NjgxODI3Nn0.EgxvKzvQFQefFt7KQ1S4qEStZ8V135UcetGrgHrIeXc';
+var ADMIN_PW = 'rhaehfdl00!!';
+var CURRENT_YEAR = '2026'; // 관리자가 선택한 연도
 
-const ADMIN_PW = "admin1234";
-
-// ─── 공휴일 (2025년 기준, 필요시 추가) ───
-const HOLIDAYS = new Set([
-  "2025-01-01","2025-01-28","2025-01-29","2025-01-30",
-  "2025-03-01","2025-05-05","2025-05-06","2025-06-06",
-  "2025-08-15","2025-10-03","2025-10-06","2025-10-07","2025-10-08","2025-10-09",
-  "2025-12-25"
-]);
-
-let empData = null;   // 현재 직원 데이터
-let selections = {};  // { "2025-06-20": 1, "2025-06-21": 0.5, ... }
-let signatureData = null;
-
-function g(id){ return document.getElementById(id); }
-function s(id,html){ const el=g(id); if(el) el.innerHTML=html; }
-function app(html){ document.getElementById('app').innerHTML=html; }
-
-// ━━━ 메인 화면 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function renderHome(){
-  empData=null; selections={}; signatureData=null;
-  app(`
-    <div class="card" style="margin-top:24px;text-align:center;">
-      <div style="font-size:36px;margin-bottom:8px;">📅</div>
-      <h2 style="margin-bottom:4px;">연차 사용 촉진</h2>
-      <p style="color:#6b7280;font-size:14px;margin-bottom:20px;">본인인증 후 연차 일정을 입력해주세요</p>
-      <div class="field"><label>이름</label><input type="text" id="inp-name" placeholder="홍길동"/></div>
-      <div class="field"><label>주민등록번호</label><input type="text" id="inp-rrn" placeholder="000000-0000000" maxlength="14"/></div>
-      <div class="err" id="login-err"></div>
-      <button class="btn btn-blue" onclick="doLogin()">확인</button>
-      <hr style="margin:20px 0;border-color:#f3f4f6"/>
-      <button class="btn btn-gray" style="font-size:13px;" onclick="renderAdminLogin()">관리자 로그인</button>
-    </div>
-  `);
-  const rrn=g('inp-rrn');
-  rrn.addEventListener('input',function(){
-    let v=this.value.replace(/\D/g,'');
-    if(v.length>6) v=v.slice(0,6)+'-'+v.slice(6,13);
-    this.value=v;
+function sbFetch(path, method, body) {
+  return fetch(SB_URL + '/rest/v1/' + path, {
+    method: method || 'GET',
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + SB_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': method === 'POST' ? 'resolution=merge-duplicates' : ''
+    },
+    body: body ? JSON.stringify(body) : undefined
+  }).then(function(r) {
+    if (!r.ok) return r.text().then(function(t) { throw new Error(t); });
+    return r.text().then(function(t) { return t ? JSON.parse(t) : null; });
   });
 }
 
-async function doLogin(){
-  const name=g('inp-name').value.trim();
-  const rrn=g('inp-rrn').value.replace(/-/g,'');
-  if(!name||rrn.length<13){ s('login-err','이름과 주민번호(13자리)를 모두 입력해주세요.'); return; }
-  const {data,error}=await sb.from('employees').select('*').eq('name',name).eq('rrn',rrn).single();
-  if(error||!data){ s('login-err','일치하는 정보가 없습니다. 인사팀에 문의해주세요.'); return; }
-  empData=data;
-  // 이미 제출했는지 확인
-  const {data:sub}=await sb.from('submissions').select('submitted_at').eq('sabun',data.sabun).single();
-  if(sub){ renderDone(sub.submitted_at); return; }
-  selections={};
-  renderInfo();
+function getEmployees(year) {
+  return sbFetch('employees?select=*&year=eq.'+year+'&order=name');
 }
-
-// ━━━ 직원 정보 확인 ━━━━━━━━━━━━━━━━━━━━━━━━
-function renderInfo(){
-  app(`
-    <div class="card">
-      <h2>📋 연차 정보 확인</h2>
-      <div class="info-row"><span class="info-label">이름</span><span class="info-value">${empData.name}</span></div>
-      <div class="info-row"><span class="info-label">부서</span><span class="info-value">${empData.dept||'-'}</span></div>
-      <div class="info-row"><span class="info-label">직급</span><span class="info-value">${empData.rank||'-'}</span></div>
-      <div class="info-row"><span class="info-label">입사일</span><span class="info-value">${empData.join_date||'-'}</span></div>
-      <div class="info-row"><span class="info-label">발생 연차</span><span class="info-value">${empData.generated}일</span></div>
-      <div class="info-row"><span class="info-label">기사용 연차</span><span class="info-value">${empData.used_existing}일</span></div>
-      <div class="info-row"><span class="info-label">잔여 연차</span><span class="info-value" style="color:#2563eb;">${empData.remaining}일</span></div>
-      <button class="btn btn-blue" style="margin-top:16px;" onclick="renderLeave()">연차 일정 입력 →</button>
-    </div>
-  `);
+function getEmployee(sabun, name, year) {
+  return sbFetch('employees?sabun=eq.'+encodeURIComponent(sabun)+'&name=eq.'+encodeURIComponent(name)+'&year=eq.'+year+'&select=*');
 }
+function upsertEmployees(rows) { return sbFetch('employees?on_conflict=sabun,year', 'POST', rows); }
+function getSubmissions(year) { return sbFetch('submissions?select=*&year=eq.'+year+'&order=name'); }
+function getSubmission(sabun, year) { return sbFetch('submissions?sabun=eq.'+encodeURIComponent(sabun)+'&year=eq.'+year+'&select=*'); }
+function upsertSubmission(data) { return sbFetch('submissions?on_conflict=sabun,year', 'POST', data); }
+function deleteEmployeesByYear(year) { return sbFetch('employees?year=eq.'+year, 'DELETE'); }
+function deleteSubmissionsByYear(year) { return sbFetch('submissions?year=eq.'+year, 'DELETE'); }
 
-// ━━━ 달력 (연차 선택) ━━━━━━━━━━━━━━━━━━━━━━
-let calYear, calMonth;
-function renderLeave(){
-  const now=new Date();
-  if(!calYear){ calYear=now.getFullYear(); calMonth=now.getMonth(); }
-  const totalSel=Object.values(selections).reduce((a,b)=>a+b,0);
-  const remain=+(empData.remaining-totalSel).toFixed(2);
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+}
+function goHome() { showPage('pg-home'); var yb=g('year-badge'); if(yb) yb.style.display='none'; }
+function goEmp()  { showPage('pg-emp'); renderAuth(); }
+function goAdmin(){ showPage('pg-admin'); renderAdminLogin(); }
+function g(id) { return document.getElementById(id); }
+function s(id, h) { var el=g(id); if(el) el.innerHTML=h; }
 
-  const firstDay=new Date(calYear,calMonth,1).getDay();
-  const lastDate=new Date(calYear,calMonth+1,0).getDate();
-  const days=['일','월','화','수','목','금','토'];
-
-  let cells='';
-  for(let i=0;i<firstDay;i++) cells+='<div></div>';
-  for(let d=1;d<=lastDate;d++){
-    const dt=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const dow=new Date(calYear,calMonth,d).getDay();
-    const isWeekend=dow===0||dow===6;
-    const isHol=HOLIDAYS.has(dt);
-    const isPast=new Date(dt)<new Date(now.toDateString());
-    let cls='cal-day';
-    if(isWeekend||isHol) cls+=' weekend';
-    if(isPast||isWeekend||isHol) cls+=' disabled';
-    const sel=selections[dt];
-    if(sel===1) cls+=' selected-1';
-    else if(sel===0.5) cls+=' selected-05';
-    else if(sel===0.25) cls+=' selected-025';
-    const label=sel?`<span class="sel-label">${sel===1?'1일':sel===0.5?'0.5':''}</span>`:'';
-    const onclick=(isPast||isWeekend||isHol)?'':'onclick="clickDay(\''+dt+'\')"';
-    cells+=`<div class="${cls}" ${onclick}>${d}${label}</div>`;
+function normalizeDate(d) {
+  if(d===null||d===undefined||d==='') return '';
+  var str=String(d).trim();
+  var num=Number(str);
+  if(!isNaN(num)&&/^\d+$/.test(str)&&num>=30000&&num<=60000){
+    var ms=(num-25569)*86400000;
+    var dt=new Date(ms);
+    return dt.getUTCFullYear()+'-'+String(dt.getUTCMonth()+1).padStart(2,'0')+'-'+String(dt.getUTCDate()).padStart(2,'0');
   }
-
-  app(`
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-        <h2 style="margin:0;">📅 연차 일정 선택</h2>
-        <button class="btn-sm" onclick="renderInfo()">← 정보</button>
-      </div>
-      <div class="remain-bar">
-        <span>남은 연차</span>
-        <strong id="remain-disp">${remain}일</strong>
-      </div>
-      <div class="month-nav">
-        <button onclick="changeMonth(-1)">◀</button>
-        <span>${calYear}년 ${calMonth+1}월</span>
-        <button onclick="changeMonth(1)">▶</button>
-      </div>
-      <div class="cal-grid">
-        ${days.map(d=>`<div class="cal-head" style="${d==='일'?'color:#ef4444':d==='토'?'color:#3b82f6':''}">${d}</div>`).join('')}
-        ${cells}
-      </div>
-      <div style="display:flex;gap:8px;margin-top:10px;font-size:12px;">
-        <span style="background:#dbeafe;padding:2px 8px;border-radius:4px;">■ 1일</span>
-        <span style="background:#ede9fe;padding:2px 8px;border-radius:4px;">■ 0.5일</span>
-        <span style="background:#fce7f3;padding:2px 8px;border-radius:4px;">■ 0.25일</span>
-      </div>
-      <div class="sel-summary" id="sel-summary" style="margin-top:12px;">선택된 날짜가 없습니다.</div>
-      <button class="btn btn-blue" onclick="goSign()" style="margin-top:4px;">서명하기 →</button>
-    </div>
-  `);
-  updateSummary();
+  var m=str.match(/(\d{4})[-./](\d{1,2})[-./](\d{1,2})/);
+  if(m) return m[1]+'-'+m[2].padStart(2,'0')+'-'+m[3].padStart(2,'0');
+  return str;
+}
+function calcPeriods(joinDate) {
+  if(!joinDate) return {gen:'',use:''};
+  var nd=normalizeDate(joinDate);
+  var m=nd.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!m) return {gen:'',use:''};
+  var yr=parseInt(m[1],10);
+  var gs=yr>=2025?(m[1]+'. '+m[2]+'. '+m[3]):'2025. 01. 01';
+  return {gen:gs+' ~ 2025. 12. 31', use:'2026. 01. 01 ~ 2026. 12. 31'};
+}
+function tl(v) { return v===1?'연차':v===0.5?'반차':'반반차'; }
+function tc(v) { return v===1?'#3b82f6':v===0.5?'#8b5cf6':'#06b6d4'; }
+function totalSel(sel) {
+  var t=0; Object.values(sel||{}).forEach(function(v){ t=+(t+v).toFixed(2); }); return t;
 }
 
-function changeMonth(d){
-  calMonth+=d;
-  if(calMonth>11){calMonth=0;calYear++;}
-  if(calMonth<0){calMonth=11;calYear--;}
-  renderLeave();
+// ═══════════════════════
+// 직원 화면
+// ═══════════════════════
+// 공휴일 목록 (YYYY-MM-DD)
+var HOLIDAYS = [
+  '2026-07-17','2026-08-17','2026-09-24','2026-09-25',
+  '2026-10-09','2026-10-05','2026-12-25'
+];
+function isHoliday(ds){ return HOLIDAYS.indexOf(ds) !== -1; }
+
+var CE=null, CS={}, SD=null, CY=2026, CM=6, PD=null, sigOk=false;
+
+function renderAuth() {
+  s('emp-body','<div class="card"><h3 style="margin-bottom:14px;font-size:15px;">본인 확인</h3>'+
+    '<label class="lbl">이름</label><input type="text" id="i-name" placeholder="홍길동" onkeydown="if(event.key===\'Enter\')doAuth()"/>'+
+    '<label class="lbl">사번</label><input type="text" id="i-sabun" placeholder="사번을 입력하세요" onkeydown="if(event.key===\'Enter\')doAuth()"/>'+
+    '<div id="auth-err" class="err"></div>'+
+    '<button class="btn btn-blue btn-block" style="margin-top:14px;" onclick="doAuth()">확인</button></div>');
 }
 
-// 날짜 클릭 → 팝업
-function clickDay(dt){
-  const cur=selections[dt]||0;
-  const totalSel=Object.values(selections).reduce((a,b)=>a+b,0);
-  const remain=+(empData.remaining-totalSel).toFixed(2);
-  const avail=cur>0?+(remain+cur).toFixed(2):remain;
-
-  const opts=[
-    {v:0,label:'선택 안 함'},
-    {v:1,label:'1일'},
-    {v:0.5,label:'0.5일 (반차)'},
-    {v:0.25,label:'0.25일 (반반차)'},
-  ].filter(o=>o.v===0||o.v<=avail||o.v===cur);
-
-  const btns=opts.map(o=>`
-    <button class="btn ${o.v===cur?'btn-blue':'btn-gray'}" style="margin-top:8px;"
-      onclick="setDay('${dt}',${o.v})">${o.label}</button>
-  `).join('');
-
-  document.getElementById('app').insertAdjacentHTML('beforeend',`
-    <div class="popup-bg" id="day-popup" onclick="if(event.target===this)closePopup()">
-      <div class="popup">
-        <h3 style="margin-bottom:8px;">${dt}</h3>
-        <p style="font-size:13px;color:#6b7280;margin-bottom:4px;">사용 연차 선택</p>
-        <p style="font-size:13px;">사용 가능: <strong>${avail}일</strong></p>
-        ${btns}
-        <button class="btn btn-gray" style="margin-top:12px;" onclick="closePopup()">취소</button>
-      </div>
-    </div>
-  `);
+function doAuth() {
+  var name=(g('i-name')||{value:''}).value.trim();
+  var sabun=(g('i-sabun')||{value:''}).value.trim();
+  if(!name||!sabun){ s('auth-err','이름과 사번을 입력해주세요.'); return; }
+  s('auth-err','확인 중...');
+  // 연도 자동 감지: 모든 연도에서 해당 직원 찾기
+  sbFetch('employees?sabun=eq.'+encodeURIComponent(sabun)+'&name=eq.'+encodeURIComponent(name)+'&select=*&order=year.desc').then(function(rows) {
+    if(!rows||rows.length===0){ s('auth-err','이름 또는 사번이 일치하지 않습니다.'); return; }
+    CE=rows[0]; CS={}; SD=null; CY=parseInt(CE.year)||2026; CM=6; sigOk=false;
+    return getSubmission(sabun, CE.year).then(function(subs) {
+      if(subs&&subs.length>0&&subs[0].submitted_at){ renderAlready(); return; }
+      renderLeave();
+    });
+  }).catch(function(e){ s('auth-err','오류: '+e.message); });
 }
 
-function setDay(dt,v){
-  if(v===0) delete selections[dt];
-  else selections[dt]=v;
-  closePopup();
-  renderLeave();
-}
-function closePopup(){ const p=g('day-popup'); if(p) p.remove(); }
-
-function updateSummary(){
-  const keys=Object.keys(selections).sort();
-  if(!keys.length){ s('sel-summary','선택된 날짜가 없습니다.'); return; }
-  const total=Object.values(selections).reduce((a,b)=>a+b,0);
-  let rows=keys.map(k=>`${k} (${selections[k]}일)`).join(' / ');
-  s('sel-summary',`<strong>선택 합계: ${total}일</strong><br/><span style="color:#6b7280;font-size:12px;">${rows}</span>`);
+function renderAlready() {
+  s('emp-body','<div class="card" style="text-align:center;"><div style="font-size:40px;margin-bottom:8px;">✅</div>'+
+    '<h3 style="color:#10b981;">이미 제출 완료되었습니다</h3>'+
+    '<p style="color:#6b7280;font-size:13px;margin-top:8px;">인사팀에서 확인 중입니다.<br/>문의사항은 인사팀으로 연락해주세요.</p>'+
+    '<button class="btn btn-blue" style="margin-top:12px;" onclick="goHome()">홈으로</button></div>');
 }
 
-function goSign(){
-  const total=Object.values(selections).reduce((a,b)=>a+b,0);
-  if(total===0){ alert('연차 날짜를 1개 이상 선택해주세요.'); return; }
-  renderSign();
+function infoCard() {
+  var e=CE, p=calcPeriods(e.join_date);
+  var rows=[['이름',e.name],['부서',e.dept||'-'],['직급',e.rank||'-'],['입사일',e.join_date||'-'],
+    ['발생연차',(e.generated||0)+'일'],['사용연차',(e.used_existing||0)+'일'],['잔여연차',(e.remaining||0)+'일']];
+  var cells=rows.map(function(r){ return '<div class="cell"><span>'+r[0]+'</span><b>'+r[1]+'</b></div>'; }).join('');
+  var pt=p.gen?'<table><tr><th class="pth">연차휴가 발생대상 기간</th><th class="pth">연차휴가 사용대상 기간</th></tr>'+
+    '<tr><td class="ptd">'+p.gen+'</td><td class="ptd">'+p.use+'</td></tr></table>':'';
+  return '<div class="card" style="background:#fde8ef;border-left:4px solid #D7005A;padding:16px;">'+
+    '<div class="grid2" style="margin-bottom:10px;">'+cells+'</div>'+pt+'</div>';
 }
 
-// ━━━ 서명 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function noticeCard() {
+  var e=CE, yr=CE.year||'2026';
+  var deadline=yr+'. 7. 10';
+  return '<div class="notice"><p><b>'+e.name+'</b> 님의 통지일 현재 사용가능한 미사용 연차유급휴가일수는 <b style="color:#dc2626;">'+e.remaining+'일</b>임을 알려드립니다.</p>'+
+    '<p style="margin-top:8px;"><b>'+deadline+'</b>일까지 미사용 연차유급휴가일수의 사용시기를 지정하여 <b>"미사용 연차유급휴가 사용시기 지정통보서"</b>를 작성하여 주시기 바랍니다.</p>'+
+    '<p style="margin-top:8px;">동 기한 내에 제출되지 아니한 경우 관련 규정에 의해 추후 회사가 임의 지정할 예정이며, 그럼에도 불구하고 사용하지 아니한 연차유급휴가일수에 대하여는 향후 <b>연차유급휴가수당이 지급되지 않음</b>을 알려드리니 유념하시기 바랍니다.</p>'+
+    '<div class="law"><b>[근로기준법 제61조 연차 유급휴가의 사용 촉진]</b><br/>'+
+    '사용자가 제60조제1항·제3항 및 제4항에 따른 유급휴가의 사용을 촉진하기 위하여 다음 각 호의 조치를 하였음에도 불구하고 근로자가 휴가를 사용하지 아니하여 제60조제7항 본문에 따라 소멸된 경우에는 사용자는 그 사용하지 아니한 휴가에 대하여 보상할 의무가 없고, 제60조제7항 단서에 따른 사용자의 귀책사유에 해당하지 아니하는 것으로 본다.<br/><br/>'+
+    '1. 제60조제7항 본문에 따른 기간이 끝나기 6개월 전을 기준으로 10일 이내에 사용자가 근로자별로 사용하지 아니한 휴가 일수를 알려주고, 근로자가 그 사용 시기를 정하여 사용자에게 통보하도록 서면으로 촉구할 것<br/><br/>'+
+    '2. 제1호에 따른 촉구에도 불구하고 근로자가 촉구를 받은 때부터 10일 이내에 사용하지 아니한 휴가의 전부 또는 일부의 사용 시기를 정하여 사용자에게 통보하지 아니하면 제60조제7항 본문에 따른 기간이 끝나기 2개월 전까지 사용자가 사용하지 아니한 휴가의 사용 시기를 정하여 근로자에게 서면으로 통보할 것</div></div>';
+}
+
+function renderLeave() {
+  var used=totalSel(CS), left=+((Number(CE.remaining)||0)-used).toFixed(2);
+  var yr=parseInt(CE.year)||2026;
+  s('emp-body', infoCard()+noticeCard()+
+    '<div class="card">'+
+    '<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:8px 12px;margin-bottom:10px;font-size:12px;color:#991b1b;line-height:1.6;">'+
+    '※ '+yr+'. 12. 31 전사휴무일입니다. 일괄 연차 소진 될 예정이오니 포함하여 사용시기를 지정해주시기 바랍니다.</div>'+
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">'+
+    '<h3 style="font-size:14px;">연차 날짜 선택</h3>'+
+    '<div style="text-align:right;"><div style="font-size:12px;color:#6b7280;">선택: <b id="lbl-used" style="color:#3b82f6;">'+used+'일</b></div>'+
+    '<div style="font-size:12px;color:#6b7280;">잔여: <b id="lbl-left" style="color:'+(left<0?'#ef4444':'#10b981')+';">'+left+'일</b></div></div></div>'+
+    '<div class="cal-hdr"><button class="nav-btn" onclick="moveM(-1)">◀</button>'+
+    '<span id="cal-title" style="font-weight:700;font-size:15px;"></span>'+
+    '<button class="nav-btn" onclick="moveM(1)">▶</button></div>'+
+    '<div id="cal-grid" class="cal-grid"></div>'+
+    '<div class="legend">'+
+    '<span style="font-size:11px;display:flex;align-items:center;gap:3px;"><span class="ldot" style="background:#3b82f6;"></span>연차(1일)</span>'+
+    '<span style="font-size:11px;display:flex;align-items:center;gap:3px;"><span class="ldot" style="background:#8b5cf6;"></span>반차(0.5일)</span>'+
+    '<span style="font-size:11px;display:flex;align-items:center;gap:3px;"><span class="ldot" style="background:#06b6d4;"></span>반반차(0.25일)</span>'+
+    '</div></div>'+
+    '<div style="text-align:right;margin-bottom:24px;"><button class="btn btn-blue" onclick="renderSign()">서명 단계로 →</button></div>');
+  drawCal();
+}
+
+function drawCal() {
+  var t=g('cal-title'); if(t) t.textContent=CY+'년 '+(CM+1)+'월';
+  var gr=g('cal-grid'); if(!gr) return;
+  var dows=['일','월','화','수','목','금','토'];
+  var h=dows.map(function(d,i){ return '<div class="dow" style="color:'+(i===0?'#ef4444':i===6?'#3b82f6':'#6b7280')+';">'+d+'</div>'; }).join('');
+  var first=new Date(CY,CM,1).getDay(), days=new Date(CY,CM+1,0).getDate();
+  for(var i=0;i<first;i++) h+='<div></div>';
+  for(var d=1;d<=days;d++){
+    var dow=new Date(CY,CM,d).getDay(), wk=dow===0||dow===6;
+    var ds=CY+'-'+String(CM+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    var holiday=isHoliday(ds);
+    var disabled=wk||holiday;
+    var v=CS[ds];
+    var tag=v?'<span class="day-tag" style="background:'+tc(v)+';">'+tl(v)+'</span>':'';
+    var hTag=holiday?'<span style="font-size:9px;color:#D7005A;">휴</span>':'';
+    var click=disabled?'':' onclick="openPop(\''+ds+'\',event)"';
+    h+='<div class="day'+(disabled?' wknd':'')+(v?' sel':'')+'"'+click+'>'+
+      '<span class="day-num" style="color:'+(disabled?'#9ca3af':v?'#1e40af':'#374151')+';font-weight:'+(v?700:400)+';">'+d+'</span>'+
+      (holiday?hTag:tag)+'</div>';
+  }
+  gr.innerHTML=h;
+}
+function updCounter(){
+  var used=totalSel(CS), left=+((Number(CE.remaining)||0)-used).toFixed(2);
+  var u=g('lbl-used'),l=g('lbl-left');
+  if(u) u.textContent=used+'일';
+  if(l){ l.textContent=left+'일'; l.style.color=left<0?'#ef4444':'#10b981'; }
+}
+function moveM(d){ CM+=d; if(CM<0){CM=11;CY--;}if(CM>11){CM=0;CY++;} drawCal(); }
+function openPop(ds,e){
+  closePop(); PD=ds;
+  var r=e.currentTarget.getBoundingClientRect(), cur=CS[ds];
+  var btns=[1,0.5,0.25].map(function(v){
+    return '<button onclick="pickL('+v+')" style="background:'+(cur===v?'#3b82f6':'#f3f4f6')+';color:'+(cur===v?'#fff':'#374151')+';">'+tl(v)+' ('+v+'일)</button>';
+  }).join('');
+  if(cur) btns+='<button onclick="pickL(0)" style="background:#fee2e2;color:#991b1b;">선택 취소</button>';
+  var pop=document.createElement('div'); pop.className='popup'; pop.id='the-pop';
+  pop.style.cssText='left:'+Math.min(r.left,window.innerWidth-160)+'px;top:'+(r.bottom+4)+'px;';
+  pop.innerHTML=btns; document.body.appendChild(pop);
+  var ov=document.createElement('div'); ov.className='ov'; ov.id='the-ov';
+  ov.onclick=closePop; document.body.appendChild(ov);
+}
+function closePop(){ var p=g('the-pop'),o=g('the-ov'); if(p)p.remove(); if(o)o.remove(); }
+function pickL(v){
+  closePop(); if(!PD) return;
+  var cur=CS[PD]||0;
+  if(v===0){ delete CS[PD]; }
+  else{
+    var diff=v-cur, left=+((Number(CE.remaining)||0)-totalSel(CS)).toFixed(2);
+    if(diff>left+0.001){ alert('잔여 연차가 부족합니다.'); return; }
+    CS[PD]=v;
+  }
+  drawCal(); updCounter();
+}
 function renderSign(){
-  const total=Object.values(selections).reduce((a,b)=>a+b,0);
-  app(`
-    <div class="card">
-      <button class="btn-sm" style="margin-bottom:12px;" onclick="renderLeave()">← 날짜 수정</button>
-      <h3 style="margin-bottom:8px;">✍️ 서명</h3>
-      <p style="font-size:13px;color:#6b7280;margin-bottom:4px;">선택하신 연차: <strong>${total}일</strong></p>
-      <p style="font-size:13px;color:#6b7280;margin-bottom:12px;">아래 박스에 마우스(또는 손가락)로 서명해주세요.</p>
-      <canvas id="sig-c" class="sig-canvas" width="440" height="120"></canvas>
-      <button class="btn-sm" style="margin-top:6px;" onclick="clearSig()">지우기</button>
-
-      <!-- ★ 서명 동의 체크박스 -->
-      <div class="agree-row" style="margin-top:14px;">
-        <input type="checkbox" id="agree-check"/>
-        <label for="agree-check">
-          본인은 위와 같이 연차 사용 일정을 확인하였으며,<br/>
-          전자 서명에 동의합니다.
-        </label>
-      </div>
-
-      <button class="btn btn-blue btn-block" style="margin-top:12px;" onclick="goConfirm()">완료 →</button>
-    </div>
-  `);
+  s('emp-body','<div class="card">'+
+    '<button class="btn-sm" style="margin-bottom:12px;" onclick="renderLeave()">← 날짜 수정</button>'+
+    '<h3 style="margin-bottom:8px;font-size:15px;">서명</h3>'+
+    '<p style="font-size:13px;color:#6b7280;margin-bottom:4px;">아래 박스에 마우스로 서명해주세요.</p>'+
+    '<p style="font-size:12px;color:#ef4444;margin-bottom:10px;">※ 본인 성명을 정자로 서명해주세요.</p>'+
+    '<canvas id="sig-c" class="sig-canvas" width="320" height="100"></canvas>'+
+    '<button class="btn-sm" style="margin-top:6px;" onclick="clearSig()">지우기</button>'+
+    '<button class="btn btn-blue btn-block" style="margin-top:14px;" onclick="goConfirm()">완료 →</button></div>');
   initSig();
 }
-
-let _sigDrawing=false;
 function initSig(){
-  const c=g('sig-c'); if(!c) return;
-  signatureData=null;
-  const ctx=c.getContext('2d');
-  function pos(e){
-    const r=c.getBoundingClientRect();
-    const src=e.touches?e.touches[0]:e;
-    return [src.clientX-r.left, src.clientY-r.top];
-  }
-  c.onmousedown=c.ontouchstart=function(e){e.preventDefault();_sigDrawing=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p[0],p[1]);};
-  c.onmousemove=c.ontouchmove=function(e){e.preventDefault();if(!_sigDrawing)return;const p=pos(e);ctx.lineWidth=2;ctx.strokeStyle='#000';ctx.lineCap='round';ctx.lineTo(p[0],p[1]);ctx.stroke();};
-  c.onmouseup=c.onmouseleave=c.ontouchend=function(e){e.preventDefault();_sigDrawing=false;signatureData=c.toDataURL();};
+  var c=g('sig-c'); if(!c) return; SD=null; sigOk=false;
+  var ctx=c.getContext('2d'), drawing=false;
+  function pos(e){ var r=c.getBoundingClientRect(),src=e.touches?e.touches[0]:e; return [src.clientX-r.left,src.clientY-r.top]; }
+  c.onmousedown=c.ontouchstart=function(e){ e.preventDefault(); drawing=true; var p=pos(e); ctx.beginPath(); ctx.moveTo(p[0],p[1]); };
+  c.onmousemove=c.ontouchmove=function(e){ e.preventDefault(); if(!drawing)return; var p=pos(e); ctx.lineWidth=2; ctx.strokeStyle='#000000'; ctx.lineCap='round'; ctx.lineTo(p[0],p[1]); ctx.stroke(); };
+  c.onmouseup=c.onmouseleave=c.ontouchend=function(e){ e.preventDefault(); drawing=false; SD=c.toDataURL(); sigOk=true; };
 }
-function clearSig(){
-  const c=g('sig-c'); if(!c) return;
-  c.getContext('2d').clearRect(0,0,c.width,c.height);
-  signatureData=null;
-}
-
-function goConfirm(){
-  const chk=g('agree-check');
-  if(!chk||!chk.checked){ alert('전자서명 동의 체크박스를 확인해주세요.'); return; }
-  if(!signatureData){ alert('서명을 먼저 해주세요.'); return; }
-  renderConfirm();
-}
-
-// ━━━ 최종 확인 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function clearSig(){ var c=g('sig-c'); if(c){ c.getContext('2d').clearRect(0,0,c.width,c.height); SD=null; sigOk=false; } }
+function goConfirm(){ if(!sigOk||!SD){ alert('서명을 먼저 해주세요.'); return; } renderConfirm(); }
 function renderConfirm(){
-  const total=Object.values(selections).reduce((a,b)=>a+b,0);
-  const keys=Object.keys(selections).sort();
-  const rows=keys.map(k=>`<div class="info-row"><span class="info-label">${k}</span><span class="info-value">${selections[k]}일</span></div>`).join('');
-  app(`
-    <div class="card">
-      <h2>✅ 최종 확인</h2>
-      <div class="info-row"><span class="info-label">이름</span><span class="info-value">${empData.name}</span></div>
-      <div class="info-row"><span class="info-label">부서</span><span class="info-value">${empData.dept}</span></div>
-      ${rows}
-      <div class="info-row"><span class="info-label">합계</span><span class="info-value" style="color:#2563eb;">${total}일</span></div>
-      <div style="margin:12px 0;">
-        <p style="font-size:12px;color:#6b7280;margin-bottom:4px;">서명</p>
-        <img src="${signatureData}" style="border:1px solid #e5e7eb;border-radius:6px;width:100%;max-height:80px;object-fit:contain;"/>
-      </div>
-      <button class="btn btn-blue" onclick="doSubmit()">제출하기</button>
-      <button class="btn btn-gray" style="margin-top:8px;" onclick="renderSign()">← 서명 다시</button>
-    </div>
-  `);
-}
-
-async function doSubmit(){
-  const total=Object.values(selections).reduce((a,b)=>a+b,0);
-  const {error}=await sb.from('submissions').upsert({
-    sabun: empData.sabun,
-    name: empData.name,
-    dept: empData.dept,
-    rank: empData.rank,
-    join_date: empData.join_date,
-    generated: empData.generated,
-    used_existing: empData.used_existing,
-    remaining: empData.remaining,
-    selections: selections,
-    total_selected: total,
-    signature: signatureData,
-    submitted_at: new Date().toISOString()
+  var used=totalSel(CS), byM={};
+  Object.entries(CS).sort(function(a,b){ return a[0].localeCompare(b[0]); }).forEach(function(kv){
+    var k=kv[0].slice(0,7); if(!byM[k]) byM[k]=[]; byM[k].push({d:kv[0],v:kv[1]});
   });
-  if(error){ alert('제출 중 오류가 발생했습니다. 인사팀에 문의해주세요.\n'+error.message); return; }
-  renderDone(new Date().toISOString());
+  var rows=Object.keys(byM).sort().map(function(mon){
+    return '<div style="margin-bottom:10px;"><div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:4px;">'+mon.replace('-','년 ')+'월</div><div>'+
+      byM[mon].map(function(x){ return '<span class="chip">'+x.d.slice(5).replace('-','/')+' '+tl(x.v)+'('+x.v+'일)</span>'; }).join('')+'</div></div>';
+  }).join('')||'<p style="color:#9ca3af;font-size:13px;">선택된 날짜가 없습니다.</p>';
+  s('emp-body','<div class="card"><h3 style="margin-bottom:4px;font-size:15px;">📋 최종 확인</h3>'+
+    '<p style="font-size:12px;color:#6b7280;margin-bottom:14px;">아래 내용으로 제출됩니다. 확인 후 최종 제출해주세요.</p>'+
+    '<div style="background:#f8fafc;border-radius:8px;padding:12px;margin-bottom:14px;"><div class="grid2">'+
+    '<div class="cell"><span>이름</span><b>'+CE.name+'</b></div>'+
+    '<div class="cell"><span>부서</span><b>'+(CE.dept||'-')+'</b></div>'+
+    '<div class="cell"><span>잔여연차</span><b>'+CE.remaining+'일</b></div>'+
+    '<div class="cell"><span>지정 총 일수</span><b>'+used+'일</b></div></div></div>'+
+    '<h4 style="font-size:13px;margin-bottom:8px;">선택한 연차 일정</h4>'+rows+
+    '<h4 style="font-size:13px;margin:10px 0 6px;">서명 확인</h4>'+
+    '<div style="border:1px solid #e5e7eb;border-radius:8px;padding:8px;display:inline-block;background:#fafafa;">'+
+    '<img src="'+SD+'" width="240" height="80"/></div>'+
+    '<div style="display:flex;gap:8px;margin-top:14px;">'+
+    '<button class="btn btn-gray" style="flex:1;" onclick="renderSign()">← 수정</button>'+
+    '<button class="btn btn-green" style="flex:2;" onclick="doSubmit()">✅ 최종 제출</button></div></div>');
+}
+function doSubmit(){
+  var used=totalSel(CS);
+  var data={sabun:CE.sabun, year:CE.year, name:CE.name, dept:CE.dept||'', rank:CE.rank||'',
+    join_date:CE.join_date||'', generated:Number(CE.generated)||0,
+    used_existing:Number(CE.used_existing)||0, remaining:Number(CE.remaining)||0,
+    selections:CS, total_selected:used, signature:SD, submitted_at:new Date().toISOString()};
+  s('emp-body','<div class="loading">제출 중...</div>');
+  upsertSubmission(data).then(function(){
+    s('emp-body','<div class="card" style="text-align:center;"><div style="font-size:44px;margin-bottom:8px;">✅</div>'+
+      '<h3 style="color:#10b981;font-size:18px;">제출 완료!</h3>'+
+      '<p style="color:#6b7280;font-size:13px;margin-top:8px;">연차촉진 신청이 완료되었습니다.<br/>인사팀에서 확인 후 연락드릴 예정입니다.</p>'+
+      '<button class="btn btn-blue" style="margin-top:12px;" onclick="goHome()">홈으로</button></div>');
+  }).catch(function(e){ alert('제출 오류: '+e.message); });
 }
 
-function renderDone(submittedAt){
-  const dt=new Date(submittedAt).toLocaleString('ko-KR');
-  app(`
-    <div class="card" style="text-align:center;margin-top:40px;">
-      <div style="font-size:48px;margin-bottom:12px;">🎉</div>
-      <h2>제출 완료!</h2>
-      <p style="color:#6b7280;font-size:14px;margin-top:8px;">연차 촉진 신청이 완료되었습니다.<br/>제출일시: ${dt}</p>
-      <p style="color:#6b7280;font-size:13px;margin-top:12px;">문의: 인사팀</p>
-    </div>
-  `);
-}
+// ═══════════════════════
+// 관리자 화면
+// ═══════════════════════
+var adminOk=false, adminTab='status', curDetailSabun=null, adminYear='2026';
 
-// ━━━ 관리자 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function renderAdminLogin(){
-  app(`
-    <div class="card" style="margin-top:40px;">
-      <h2>🔐 관리자 로그인</h2>
-      <div class="field"><label>비밀번호</label><input type="password" id="adm-pw" placeholder="관리자 비밀번호"/></div>
-      <div class="err" id="adm-err"></div>
-      <button class="btn btn-blue" onclick="doAdminLogin()">로그인</button>
-      <button class="btn btn-gray" style="margin-top:8px;" onclick="renderHome()">← 돌아가기</button>
-    </div>
-  `);
+  adminOk=false; adminTab='status'; curDetailSabun=null;
+  s('admin-body','<div class="card" style="max-width:340px;margin:40px auto;">'+
+    '<h3 style="margin-bottom:14px;font-size:15px;">🔐 관리자 로그인</h3>'+
+    '<input type="password" id="i-pw" placeholder="관리자 비밀번호" onkeydown="if(event.key===\'Enter\')doLogin()"/>'+
+    '<div id="pw-err" class="err"></div>'+
+    '<button class="btn btn-dark btn-block" style="margin-top:10px;" onclick="doLogin()">로그인</button></div>');
 }
-function doAdminLogin(){
-  if(g('adm-pw').value!==ADMIN_PW){ s('adm-err','비밀번호가 틀렸습니다.'); return; }
-  renderAdmin('status');
+function doLogin(){
+  var pw=(g('i-pw')||{value:''}).value;
+  if(pw===ADMIN_PW){ adminOk=true; renderYearSelect(); }
+  else s('pw-err','비밀번호가 틀렸습니다.');
 }
 
-async function renderAdmin(tab){
-  app(`<div style="padding-top:8px;"><div class="tab-bar"><button class="tab ${tab==='status'?'active':''}" onclick="renderAdmin('status')">진행 현황</button><button class="tab ${tab==='upload'?'active':''}" onclick="renderAdmin('upload')">직원 업로드</button></div><div id="adm-body">로딩 중...</div></div>`);
+// 연도 선택 화면
+function renderYearSelect(){
+  var curYear=new Date().getFullYear();
+  var years=[];
+  for(var y=curYear+1; y>=2024; y--) years.push(y);
+  var opts=years.map(function(y){
+    return '<option value="'+y+'"'+(y==adminYear?' selected':'')+'>'+y+'년</option>';
+  }).join('');
+  s('admin-body','<div class="card" style="max-width:400px;margin:20px auto;">'+
+    '<h3 style="margin-bottom:14px;font-size:15px;">📅 관리 연도 선택</h3>'+
+    '<select id="sel-year" style="margin-bottom:14px;">'+opts+'</select>'+
+    '<button class="btn btn-blue btn-block" onclick="setAdminYear()">확인</button></div>');
+}
+function setAdminYear(){
+  var sel=g('sel-year'); if(!sel) return;
+  adminYear=sel.value;
+  var yb=g('year-badge'); if(yb){ yb.textContent=adminYear+'년'; yb.style.display='inline-block'; }
+  renderStatus();
+}
 
-  if(tab==='status'){
-    const [{data:emps},{data:subs}]=await Promise.all([
-      sb.from('employees').select('*').order('dept'),
-      sb.from('submissions').select('*')
-    ]);
-    const subMap={};
-    (subs||[]).forEach(s=>subMap[s.sabun]=s);
-    const done=(subs||[]).length;
-    const total=(emps||[]).length;
+function tabBar(){
+  return '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">'+
+    '<div class="tabs" style="margin-bottom:0;">'+
+    '<button class="btn '+(adminTab==='status'?'btn-dark':'btn-gray')+'" style="padding:8px 16px;" onclick="adminTab=\'status\';curDetailSabun=null;renderStatus()">현황</button>'+
+    '<button class="btn '+(adminTab==='upload'?'btn-dark':'btn-gray')+'" style="padding:8px 16px;" onclick="adminTab=\'upload\';renderUpload()">직원 업로드</button></div>'+
+    '<button class="btn-sm" onclick="renderYearSelect()">📅 연도변경 ('+adminYear+'년)</button></div>';
+}
 
-    let rows=(emps||[]).map(e=>{
-      const sub=subMap[e.sabun];
-      const badge=sub
-        ?`<span class="badge badge-green">완료</span>`
-        :`<span class="badge badge-yellow">미완료</span>`;
-      const dt=sub?new Date(sub.submitted_at).toLocaleDateString('ko-KR'):'-';
-      const sel=sub?sub.total_selected+'일':'-';
-      return `<tr>
-        <td>${e.dept||'-'}</td>
-        <td>${e.name}</td>
-        <td>${e.remaining}일</td>
-        <td>${sel}</td>
-        <td>${badge}</td>
-        <td>${dt}</td>
-        <td>${sub?`<button class="btn-sm" onclick="viewSub('${e.sabun}')">보기</button>`:''}</td>
-      </tr>`;
+function renderStatus(){
+  adminTab='status';
+  s('admin-body',tabBar()+'<div class="loading">불러오는 중...</div>');
+  Promise.all([getEmployees(adminYear),getSubmissions(adminYear)]).then(function(res){
+    var emps=res[0]||[], subs=res[1]||[], subMap={};
+    subs.forEach(function(s){ subMap[s.sabun]=s; });
+    var doneCount=emps.filter(function(e){ return !!(subMap[e.sabun]&&subMap[e.sabun].submitted_at); }).length;
+    var rows=emps.map(function(e){
+      var sub=subMap[e.sabun], done=!!(sub&&sub.submitted_at);
+      return '<tr style="background:'+(done?'#f0fdf4':'#fff')+';">'+
+        '<td style="text-align:left;padding-left:10px;">'+e.name+'</td>'+
+        '<td>'+(e.dept||'-')+'</td><td>'+(e.remaining||0)+'일</td>'+
+        '<td>'+(done?sub.total_selected+'일':'-')+'</td>'+
+        '<td><span class="badge '+(done?'bdone':'bwait')+'">'+(done?'✅ 완료':'⏳ 미완료')+'</span></td>'+
+        '<td>'+(done?'<button class="btn-sm" onclick="openDetail(\''+e.sabun+'\')">상세</button>':'')+'</td></tr>';
     }).join('');
-
-    s('adm-body',`
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-          <span style="font-size:14px;color:#6b7280;">완료 <strong>${done}</strong> / 전체 <strong>${total}</strong>명</span>
-          <button class="btn-sm btn-blue" onclick="renderHome()">로그아웃</button>
-        </div>
-        <div class="table-wrap">
-          <table><thead><tr><th>부서</th><th>이름</th><th>잔여</th><th>선택</th><th>상태</th><th>제출일</th><th></th></tr></thead>
-          <tbody>${rows||'<tr><td colspan=7>직원 없음</td></tr>'}</tbody></table>
-        </div>
-      </div>
-    `);
-  } else {
-    s('adm-body',`
-      <div class="card">
-        <h3 style="margin-bottom:8px;">엑셀 업로드</h3>
-        <p style="font-size:13px;color:#6b7280;margin-bottom:12px;">
-          컬럼 순서: 사번 / 이름 / 부서 / 직급 / 입사일 / 주민번호 / 발생연차 / 기사용연차 / 잔여연차
-        </p>
-        <input type="file" id="xl-file" accept=".xlsx,.xls" style="margin-bottom:12px;"/>
-        <button class="btn btn-blue" onclick="doUpload()">업로드</button>
-        <div id="upload-result" style="margin-top:12px;font-size:13px;"></div>
-      </div>
-    `);
-  }
+    s('admin-body',tabBar()+'<div class="card">'+
+      '<h3 style="margin-bottom:12px;font-size:14px;">📋 '+adminYear+'년 직원별 진행 현황</h3>'+
+      (emps.length===0?'<p style="color:#9ca3af;font-size:13px;">'+adminYear+'년 업로드된 직원이 없습니다.</p>':
+      '<div style="overflow-x:auto;"><table>'+
+      '<tr><th style="text-align:left;padding-left:10px;">이름</th><th>부서</th><th>잔여연차</th><th>지정일수</th><th>상태</th><th></th></tr>'+
+      rows+'</table></div>'+
+      '<p style="font-size:12px;color:#6b7280;margin-top:8px;">완료: <b>'+doneCount+'명</b> / 전체: <b>'+emps.length+'명</b></p>')+
+      '</div>');
+  }).catch(function(e){ s('admin-body',tabBar()+'<div class="card"><p style="color:#ef4444;">오류: '+e.message+'</p></div>'); });
 }
 
-async function doUpload(){
-  const file=g('xl-file').files[0];
-  if(!file){ alert('파일을 선택해주세요.'); return; }
-  const XLSX=window.XLSX_LIB;
-  const buf=await file.arrayBuffer();
-  const wb=XLSX.read(buf,{type:'array'});
-  const ws=wb.Sheets[wb.SheetNames[0]];
-  const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
-  const data=[];
-  for(let i=1;i<rows.length;i++){
-    const r=rows[i];
-    if(!r[0]&&!r[1]) continue;
-    data.push({
-      sabun:String(r[0]).trim(),
-      name:String(r[1]).trim(),
-      dept:String(r[2]).trim(),
-      rank:String(r[3]).trim(),
-      join_date:String(r[4]).trim(),
-      rrn:String(r[5]).replace(/-/g,'').trim(),
-      generated:Number(r[6])||0,
-      used_existing:Number(r[7])||0,
-      remaining:Number(r[8])||0
+function openDetail(sabun){
+  curDetailSabun=sabun;
+  s('admin-body',tabBar()+'<div class="loading">불러오는 중...</div>');
+  Promise.all([getSubmission(sabun,adminYear),getEmployees(adminYear)]).then(function(res){
+    var subs=res[0]||[], emps=res[1]||[];
+    var sub=subs[0], emp=emps.find(function(e){ return e.sabun===sabun; });
+    if(!sub||!emp){ alert('데이터를 찾을 수 없습니다.'); renderStatus(); return; }
+    var sel=typeof sub.selections==='string'?JSON.parse(sub.selections):(sub.selections||{});
+    var chips=Object.entries(sel).sort(function(a,b){ return a[0].localeCompare(b[0]); })
+      .map(function(kv){ return '<span class="chip">'+kv[0]+' ('+tl(kv[1])+')</span>'; }).join('');
+    var info=[['부서',sub.dept],['직급',sub.rank||emp.rank||'-'],
+      ['발생연차',(sub.generated||0)+'일'],['기사용연차',(sub.used_existing||0)+'일'],
+      ['잔여연차',(sub.remaining||0)+'일'],['지정일수',(sub.total_selected||0)+'일'],
+      ['제출일',new Date(sub.submitted_at).toLocaleDateString('ko-KR')]];
+    var infoHtml=info.map(function(r){ return '<div class="cell" style="background:#f8fafc;border-radius:6px;padding:7px 10px;"><span>'+r[0]+'</span><b>'+r[1]+'</b></div>'; }).join('');
+    s('admin-body',tabBar()+'<div class="card">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">'+
+      '<button class="btn-sm" onclick="curDetailSabun=null;renderStatus()">← 목록</button>'+
+      '<button class="btn btn-blue" style="padding:8px 16px;font-size:13px;" onclick="doPrint(\''+sabun+'\')">🖨️ PDF 출력</button></div>'+
+      '<h3 style="font-size:15px;margin-bottom:12px;">'+sub.name+' 님 연차촉진 확인서 ('+adminYear+'년)</h3>'+
+      '<div class="grid2" style="margin-bottom:12px;">'+infoHtml+'</div>'+
+      '<h4 style="font-size:13px;margin-bottom:8px;">지정 연차 일정</h4>'+
+      '<div style="margin-bottom:12px;">'+(chips||'<p style="color:#9ca3af;font-size:12px;">선택 없음</p>')+'</div>'+
+      (sub.signature?'<h4 style="font-size:13px;margin-bottom:6px;">서명</h4>'+
+      '<div style="border:1px solid #e5e7eb;border-radius:8px;padding:8px;display:inline-block;background:#fafafa;">'+
+      '<img src="'+sub.signature+'" width="240" height="80"/></div>':'')+'</div>');
+  }).catch(function(e){ alert('오류: '+e.message); });
+}
+
+function doPrint(sabun){
+  Promise.all([getSubmission(sabun,adminYear),getEmployees(adminYear)]).then(function(res){
+    var subs=res[0]||[], emps=res[1]||[];
+    var sub=subs[0], emp=emps.find(function(e){ return e.sabun===sabun; });
+    if(!sub||!emp) return;
+    var sel=typeof sub.selections==='string'?JSON.parse(sub.selections):(sub.selections||{});
+    var p=calcPeriods(emp.join_date), byM={};
+    Object.entries(sel).sort(function(a,b){ return a[0].localeCompare(b[0]); }).forEach(function(kv){
+      var m=parseInt(kv[0].split('-')[1]); if(!byM[m]) byM[m]=[]; byM[m].push({d:kv[0],v:kv[1]});
     });
+    function mc(m){ return (byM[m]||[]).map(function(x){ return x.d.split('-')[2]+'일('+tl(x.v)+')'; }).join(', ')||''; }
+    var dt=new Date(sub.submitted_at);
+    var yr=adminYear;
+    var html='<!DOCTYPE html><html><head><meta charset="utf-8">'+
+'<style>*{box-sizing:border-box;margin:0;padding:0;}@page{size:A4;margin:12mm 15mm;}'+
+'body{font-family:\'Malgun Gothic\',sans-serif;font-size:11.5px;color:#111;}'+
+'h2{text-align:center;font-size:15px;margin-bottom:3px;}table{width:100%;border-collapse:collapse;margin-bottom:7px;}'+
+'th,td{border:1px solid #555;padding:4px 6px;text-align:center;font-size:11px;}th{background:#f0f0f0;font-weight:700;}'+
+'.n{font-size:11px;line-height:1.7;margin-bottom:7px;}'+
+'.law{border:1px solid #aaa;padding:7px 9px;font-size:10px;line-height:1.6;margin-bottom:8px;background:#fafafa;}'+
+'.sig{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-top:8px;}'+
+'.logo{text-align:center;margin-top:10px;font-size:17px;font-weight:900;letter-spacing:2px;}'+
+'.sec{text-align:center;font-size:13px;font-weight:700;margin:10px 0 7px;border-top:2px solid #111;border-bottom:1px solid #111;padding:4px 0;}'+
+'hr{border:none;border-top:1px dashed #aaa;margin:8px 0;}</style></head><body>'+
+'<h2>☑ 미사용 연차유급휴가일수 통지<br>☑ 휴가사용 시기지정 통보 촉구</h2>'+
+'<p style="text-align:center;font-size:10px;color:#666;margin-bottom:8px;">[ 관련법령 : 근로기준법 제61조의 2항 ]</p>'+
+'<table><tr><th style="width:60px">성 명</th><td style="text-align:left;padding-left:8px;">'+sub.name+'</td>'+
+'<th style="width:50px">소 속</th><td style="text-align:left;padding-left:8px;">'+sub.dept+'</td>'+
+'<th style="width:45px">직급</th><td style="text-align:left;padding-left:8px;">'+(sub.rank||emp.rank||'')+'</td></tr></table>'+
+'<p style="text-align:right;font-size:10px;margin-bottom:3px;">'+yr+'년 6월 30일 기준</p>'+
+'<table><tr><th>연차휴가 발생대상 기간</th><th>연차휴가 사용대상 기간</th><th>발생연차 (A)</th><th>사용연차 (B)</th><th><b>잔여연차 (A-B)</b></th></tr>'+
+'<tr><td>'+p.gen+'</td><td>'+p.use+'</td><td>'+sub.generated+'</td><td>'+sub.used_existing+'</td><td><b>'+sub.remaining+'</b></td></tr></table>'+
+'<div class="n"><p>'+sub.name+' 님의 통지일 현재 사용가능한 미사용 연차유급휴가일수는 <b>'+sub.remaining+' 日</b> 임을 알려드립니다.</p><br>'+
+'<p><b>'+yr+'. 7. 10일까지 미사용 연차유급휴가일수의 사용시기를 지정하여 "미사용 연차유급휴가 사용시기 지정통보서"를 작성하여 인사총무팀 담당자 앞으로 서면통보 하여 주시기 바랍니다.</b></p><br>'+
+'<p>동 기한 내에 붙임 서식에 의한 "미사용 연차유급휴가 사용시기 지정통보"가 제출되지 아니한 경우 관련 규정에 의해 추후 회사가 임의 지정할 예정이며, 그럼에도 불구하고 사용하지 아니한 연차유급휴가일수에 대하여는 향후 <b>연차유급휴가수당이 지급되지 않음</b>을 알려드리니 유념하시기 바랍니다.</p></div>'+
+'<div class="law"><b>[근로기준법 제61조 연차 유급휴가의 사용 촉진]</b><br>'+
+'사용자가 제60조제1항·제3항 및 제4항에 따른 유급휴가의 사용을 촉진하기 위하여 다음 각 호의 조치를 하였음에도 불구하고 근로자가 휴가를 사용하지 아니하여 제60조제7항 본문에 따라 소멸된 경우에는 사용자는 그 사용하지 아니한 휴가에 대하여 보상할 의무가 없고, 제60조제7항 단서에 따른 사용자의 귀책사유에 해당하지 아니하는 것으로 본다.<br><br>'+
+'1. 제60조제7항 본문에 따른 기간이 끝나기 6개월 전을 기준으로 10일 이내에 사용자가 근로자별로 사용하지 아니한 휴가 일수를 알려주고, 근로자가 그 사용 시기를 정하여 사용자에게 통보하도록 서면으로 촉구할 것<br><br>'+
+'2. 제1호에 따른 촉구에도 불구하고 근로자가 촉구를 받은 때부터 10일 이내에 사용하지 아니한 휴가의 전부 또는 일부의 사용 시기를 정하여 사용자에게 통보하지 아니하면 제60조제7항 본문에 따른 기간이 끝나기 2개월 전까지 사용자가 사용하지 아니한 휴가의 사용 시기를 정하여 근로자에게 서면으로 통보할 것</div>'+
+'<p style="font-size:10px;color:#666;">※ "미사용 연차유급휴가 사용시기 지정통보"는 하기 서식을 사용해 주시기 바랍니다.</p><hr/>'+
+'<div class="sec">미사용 연차유급휴가 사용시기 지정통보서</div>'+
+'<table><tr><th style="width:60px">성 명</th><td style="text-align:left;padding-left:8px;">'+sub.name+'</td>'+
+'<th style="width:50px">소 속</th><td style="text-align:left;padding-left:8px;">'+sub.dept+'</td>'+
+'<th style="width:45px">직급</th><td style="text-align:left;padding-left:8px;">'+(sub.rank||emp.rank||'')+'</td></tr></table>'+
+'<p class="n">'+yr+'.07.01 통지받은 "미사용 연차유급휴가일수" 및 "휴가사용 시기지정 통보 촉구"에 의거하여 아래와 같이 본인의 미사용 연차유급휴가 사용시기를 지정하여 통보드립니다.</p>'+
+'<p style="text-align:center;margin-bottom:7px;">- 아 래 -</p>'+
+'<p style="font-weight:700;margin-bottom:5px;font-size:11px;">1. 통지받은 내역</p>'+
+'<table><tr><th>연차휴가 발생대상 기간</th><th>연차휴가 사용대상 기간</th><th>발생연차 (A)</th><th>사용연차 (B)</th><th><b>미사용 (A-B)</b></th></tr>'+
+'<tr><td>'+p.gen+'</td><td>'+p.use+'</td><td>'+sub.generated+'</td><td>'+sub.used_existing+'</td><td><b>'+sub.remaining+'</b></td></tr></table>'+
+'<p style="font-weight:700;margin-bottom:5px;font-size:11px;">2. 미사용 연차유급휴가 사용시기 지정 통보내역</p>'+
+'<table><tr><th>구분</th><th>사용시기 지정일</th><th>구분</th><th>사용시기 지정일</th><th>비고</th></tr>'+
+'<tr><td>7월</td><td style="text-align:left;padding-left:6px;">'+mc(7)+'</td><td>10월</td><td style="text-align:left;padding-left:6px;">'+mc(10)+'</td><td rowspan="3"></td></tr>'+
+'<tr><td>8월</td><td style="text-align:left;padding-left:6px;">'+mc(8)+'</td><td>11월</td><td style="text-align:left;padding-left:6px;">'+mc(11)+'</td></tr>'+
+'<tr><td>9월</td><td style="text-align:left;padding-left:6px;">'+mc(9)+'</td><td>12월</td><td style="text-align:left;padding-left:6px;">'+mc(12)+'</td></tr></table>'+
+'<p style="text-align:center;margin:10px 0 5px;">'+yr+'년 &nbsp; '+(dt.getMonth()+1)+'월 &nbsp; '+dt.getDate()+'일</p>'+
+'<div class="sig"><span>상기본인</span><img src="'+sub.signature+'" width="100" height="42" style="border:1px solid #ccc;border-radius:4px;"/><span>(인)</span></div>'+
+'<div class="logo">ATEC 에이텍컴퓨터</div></body></html>';
+    var w=window.open('','_blank'); w.document.write(html); w.document.close(); setTimeout(function(){ w.print(); },600);
+  }).catch(function(e){ alert('오류: '+e.message); });
+}
+
+function renderUpload(){
+  adminTab='upload';
+  getEmployees(adminYear).then(function(emps){
+    emps=emps||[];
+    var tbl=emps.length?('<p style="font-size:12px;margin:12px 0 6px;">'+adminYear+'년 등록: <b>'+emps.length+'명</b></p>'+
+      '<div style="overflow-x:auto;"><table><tr>'+
+      ['사번','이름','부서','직급','입사일자','발생연차','사용연차','잔여연차'].map(function(h){ return '<th>'+h+'</th>'; }).join('')+'</tr>'+
+      emps.map(function(e){ return '<tr>'+
+        [e.sabun,e.name,e.dept,e.rank,e.join_date,e.generated,e.used_existing,e.remaining]
+        .map(function(v){ return '<td>'+(v!==undefined?v:'')+'</td>'; }).join('')+'</tr>'; }).join('')+
+      '</table></div>'):'';
+    s('admin-body',tabBar()+
+      '<div class="card"><h3 style="margin-bottom:8px;font-size:14px;">📤 '+adminYear+'년 직원 엑셀 업로드</h3>'+
+      '<p style="font-size:12px;color:#6b7280;margin-bottom:4px;">컬럼: <b>사번 / 이름 / 부서 / 직급 / 입사일자 / 발생연차 / 사용연차 / 잔여연차</b></p>'+
+      '<input type="file" accept=".xlsx,.xls,.csv" onchange="handleUpload(this)" style="font-size:13px;margin:4px 0 8px;"/>'+
+      '<div style="margin-top:10px;padding-top:10px;border-top:1px solid #e5e7eb;">'+
+      '<p style="font-size:12px;color:#6b7280;margin-bottom:6px;">⚠️ <b>'+adminYear+'년</b> 직원 목록과 제출 데이터를 초기화합니다.</p>'+
+      '<button class="btn btn-red" style="font-size:13px;padding:7px 16px;" onclick="resetAll()">🗑️ '+adminYear+'년 데이터 초기화</button></div>'+
+      tbl+'</div>');
+  });
+}
+
+function resetAll(){
+  if(!confirm(adminYear+'년 직원 목록과 제출 데이터가 모두 삭제됩니다.\n정말 초기화하시겠습니까?')) return;
+  s('admin-body',tabBar()+'<div class="loading">초기화 중...</div>');
+  Promise.all([deleteEmployeesByYear(adminYear),deleteSubmissionsByYear(adminYear)]).then(function(){
+    alert(adminYear+'년 초기화 완료!'); renderUpload();
+  }).catch(function(e){ alert('오류: '+e.message); });
+}
+
+function handleUpload(input){
+  var file=input.files[0]; if(!file) return;
+  if(file.name.toLowerCase().endsWith('.csv')){
+    var r=new FileReader();
+    r.onload=function(ev){ applyRows(parseCSV(ev.target.result)); };
+    r.readAsText(file,'utf-8'); return;
   }
-  if(!data.length){ s('upload-result','<span style="color:#ef4444">데이터가 없습니다.</span>'); return; }
-  const {error}=await sb.from('employees').upsert(data,{onConflict:'sabun'});
-  if(error){ s('upload-result',`<span style="color:#ef4444">오류: ${error.message}</span>`); return; }
-  s('upload-result',`<span style="color:#16a34a">✅ ${data.length}명 업로드 완료!</span>`);
+  var r=new FileReader();
+  r.onload=function(ev){
+    var data=new Uint8Array(ev.target.result);
+    function go(){
+      var wb=window.XLSX.read(data,{type:'array'});
+      applyRows(window.XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''}));
+    }
+    if(window.XLSX){ go(); return; }
+    var sc=document.createElement('script');
+    sc.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+    sc.onload=go; sc.onerror=function(){ alert('CSV로 저장 후 다시 시도해주세요.'); };
+    document.head.appendChild(sc);
+  };
+  r.readAsArrayBuffer(file);
+}
+function parseCSV(text){
+  var lines=text.split(/\r?\n/).filter(function(l){ return l.trim(); });
+  var headers=lines[0].split(',').map(function(h){ return h.trim().replace(/^"|"$/g,''); });
+  return lines.slice(1).map(function(l){
+    var cols=l.split(',').map(function(c){ return c.trim().replace(/^"|"$/g,''); });
+    var o={}; headers.forEach(function(h,i){ o[h]=cols[i]||''; }); return o;
+  });
+}
+function applyRows(rows){
+  var emps=rows.map(function(r){
+    var n={};
+    Object.keys(r).forEach(function(k){ n[k.trim()]=String(r[k]||'').trim(); });
+    return {
+      sabun:n['사번']||'', name:n['이름']||'', dept:n['부서']||'', rank:n['직급']||'',
+      join_date:normalizeDate(n['입사일자']||''),
+      generated:Number(n['발생연차'])||0,
+      used_existing:Number(n['사용연차'])||0,
+      remaining:Number(n['잔여연차'])||0,
+      year:adminYear
+    };
+  }).filter(function(e){ return e.sabun&&e.name; });
+  if(!emps.length){ alert('데이터가 없습니다. 컬럼명을 확인해주세요.'); return; }
+  s('admin-body',tabBar()+'<div class="loading">업로드 중...</div>');
+  upsertEmployees(emps).then(function(){
+    alert(emps.length+'명 업로드 완료! ('+adminYear+'년)');
+    renderUpload();
+  }).catch(function(e){ alert('업로드 오류: '+e.message); });
 }
 
-async function viewSub(sabun){
-  const {data}=await sb.from('submissions').select('*').eq('sabun',sabun).single();
-  if(!data){ alert('데이터 없음'); return; }
-  const sels=data.selections||{};
-  const keys=Object.keys(sels).sort();
-  const rows=keys.map(k=>`<div class="info-row"><span class="info-label">${k}</span><span class="info-value">${sels[k]}일</span></div>`).join('');
-  document.getElementById('app').insertAdjacentHTML('beforeend',`
-    <div class="popup-bg" id="sub-popup" onclick="if(event.target===this)g('sub-popup').remove()">
-      <div class="popup" style="max-height:80vh;overflow-y:auto;">
-        <h3 style="margin-bottom:12px;">${data.name} 제출 내용</h3>
-        ${rows}
-        <div class="info-row"><span class="info-label">합계</span><span class="info-value">${data.total_selected}일</span></div>
-        <p style="font-size:12px;color:#6b7280;margin:8px 0;">서명</p>
-        <img src="${data.signature}" style="width:100%;border:1px solid #e5e7eb;border-radius:6px;"/>
-        <button class="btn btn-gray" style="margin-top:12px;" onclick="g('sub-popup').remove()">닫기</button>
-      </div>
-    </div>
-  `);
-}
-
-// XLSX 라이브러리 동적 로드
-const xlScript=document.createElement('script');
-xlScript.src='https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.full.min.js';
-xlScript.onload=function(){ window.XLSX_LIB=window.XLSX; };
-document.head.appendChild(xlScript);
-
-// 시작
-renderHome();
+showPage('pg-home');
 </script>
 </body>
 </html>
