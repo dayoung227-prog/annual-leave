@@ -56,6 +56,11 @@ th{background:#f0f0f0;font-weight:700;}
 .top-bar{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-top:14px;}
 .loading{text-align:center;padding:40px;color:#6b7280;font-size:14px;}
 .year-badge{background:#1e293b;color:#fff;border-radius:6px;padding:3px 10px;font-size:13px;font-weight:700;}
+/* ★ 동의 체크박스 스타일 */
+.agree-box{background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:14px 16px;margin:14px 0;}
+.agree-box label{display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:13px;color:#374151;line-height:1.7;}
+.agree-box input[type=checkbox]{width:18px;height:18px;flex-shrink:0;margin-top:2px;accent-color:#D7005A;cursor:pointer;}
+.agree-box .agree-title{font-weight:700;color:#166534;font-size:13px;margin-bottom:6px;}
 </style>
 </head>
 <body>
@@ -97,7 +102,6 @@ th{background:#f0f0f0;font-weight:700;}
 var SB_URL = 'https://nzzcvigxakfhmyokjlse.supabase.co';
 var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56emN2aWd4YWtmaG15b2tqbHNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyNDIyNzYsImV4cCI6MjA5NjgxODI3Nn0.EgxvKzvQFQefFt7KQ1S4qEStZ8V135UcetGrgHrIeXc';
 var ADMIN_PW = 'rhaehfdl00!!';
-var CURRENT_YEAR = '2026'; // 관리자가 선택한 연도
 
 function sbFetch(path, method, body) {
   return fetch(SB_URL + '/rest/v1/' + path, {
@@ -115,12 +119,7 @@ function sbFetch(path, method, body) {
   });
 }
 
-function getEmployees(year) {
-  return sbFetch('employees?select=*&year=eq.'+year+'&order=name');
-}
-function getEmployee(sabun, name, year) {
-  return sbFetch('employees?sabun=eq.'+encodeURIComponent(sabun)+'&name=eq.'+encodeURIComponent(name)+'&year=eq.'+year+'&select=*');
-}
+function getEmployees(year) { return sbFetch('employees?select=*&year=eq.'+year+'&order=name'); }
 function upsertEmployees(rows) { return sbFetch('employees?on_conflict=sabun,year', 'POST', rows); }
 function getSubmissions(year) { return sbFetch('submissions?select=*&year=eq.'+year+'&order=name'); }
 function getSubmission(sabun, year) { return sbFetch('submissions?sabun=eq.'+encodeURIComponent(sabun)+'&year=eq.'+year+'&select=*'); }
@@ -128,8 +127,18 @@ function upsertSubmission(data) { return sbFetch('submissions?on_conflict=sabun,
 function deleteEmployeesByYear(year) { return sbFetch('employees?year=eq.'+year, 'DELETE'); }
 function deleteSubmissionsByYear(year) { return sbFetch('submissions?year=eq.'+year, 'DELETE'); }
 
+// ★ 접속 정보 수집
+function getClientInfo() {
+  return {
+    user_agent: navigator.userAgent || '',
+    screen: (window.screen.width||0)+'x'+(window.screen.height||0),
+    lang: navigator.language || '',
+    platform: navigator.platform || ''
+  };
+}
+
 function showPage(id) {
-  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
   document.getElementById(id).classList.add('active');
 }
 function goHome() { showPage('pg-home'); var yb=g('year-badge'); if(yb) yb.style.display='none'; }
@@ -140,11 +149,9 @@ function s(id, h) { var el=g(id); if(el) el.innerHTML=h; }
 
 function normalizeDate(d) {
   if(d===null||d===undefined||d==='') return '';
-  var str=String(d).trim();
-  var num=Number(str);
+  var str=String(d).trim(), num=Number(str);
   if(!isNaN(num)&&/^\d+$/.test(str)&&num>=30000&&num<=60000){
-    var ms=(num-25569)*86400000;
-    var dt=new Date(ms);
+    var ms=(num-25569)*86400000, dt=new Date(ms);
     return dt.getUTCFullYear()+'-'+String(dt.getUTCMonth()+1).padStart(2,'0')+'-'+String(dt.getUTCDate()).padStart(2,'0');
   }
   var m=str.match(/(\d{4})[-./](\d{1,2})[-./](\d{1,2})/);
@@ -153,32 +160,25 @@ function normalizeDate(d) {
 }
 function calcPeriods(joinDate) {
   if(!joinDate) return {gen:'',use:''};
-  var nd=normalizeDate(joinDate);
-  var m=nd.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  var nd=normalizeDate(joinDate), m=nd.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if(!m) return {gen:'',use:''};
   var yr=parseInt(m[1],10);
   var gs=yr>=2025?(m[1]+'. '+m[2]+'. '+m[3]):'2025. 01. 01';
   return {gen:gs+' ~ 2025. 12. 31', use:'2026. 01. 01 ~ 2026. 12. 31'};
 }
-function tl(v) { return v===1?'연차':v===0.5?'반차':'반반차'; }
-function tc(v) { return v===1?'#3b82f6':v===0.5?'#8b5cf6':'#06b6d4'; }
-function totalSel(sel) {
-  var t=0; Object.values(sel||{}).forEach(function(v){ t=+(t+v).toFixed(2); }); return t;
-}
+function tl(v){ return v===1?'연차':v===0.5?'반차':'반반차'; }
+function tc(v){ return v===1?'#3b82f6':v===0.5?'#8b5cf6':'#06b6d4'; }
+function totalSel(sel){ var t=0; Object.values(sel||{}).forEach(function(v){ t=+(t+v).toFixed(2); }); return t; }
 
 // ═══════════════════════
 // 직원 화면
 // ═══════════════════════
-// 공휴일 목록 (YYYY-MM-DD)
-var HOLIDAYS = [
-  '2026-07-17','2026-08-17','2026-09-24','2026-09-25',
-  '2026-10-09','2026-10-05','2026-12-25'
-];
-function isHoliday(ds){ return HOLIDAYS.indexOf(ds) !== -1; }
+var HOLIDAYS=['2026-07-17','2026-08-17','2026-09-24','2026-09-25','2026-10-09','2026-10-05','2026-12-25'];
+function isHoliday(ds){ return HOLIDAYS.indexOf(ds)!==-1; }
 
 var CE=null, CS={}, SD=null, CY=2026, CM=6, PD=null, sigOk=false;
 
-function renderAuth() {
+function renderAuth(){
   s('emp-body','<div class="card"><h3 style="margin-bottom:14px;font-size:15px;">본인 확인</h3>'+
     '<label class="lbl">이름</label><input type="text" id="i-name" placeholder="홍길동" onkeydown="if(event.key===\'Enter\')doAuth()"/>'+
     '<label class="lbl">사번</label><input type="text" id="i-sabun" placeholder="사번을 입력하세요" onkeydown="if(event.key===\'Enter\')doAuth()"/>'+
@@ -186,30 +186,29 @@ function renderAuth() {
     '<button class="btn btn-blue btn-block" style="margin-top:14px;" onclick="doAuth()">확인</button></div>');
 }
 
-function doAuth() {
+function doAuth(){
   var name=(g('i-name')||{value:''}).value.trim();
   var sabun=(g('i-sabun')||{value:''}).value.trim();
   if(!name||!sabun){ s('auth-err','이름과 사번을 입력해주세요.'); return; }
   s('auth-err','확인 중...');
-  // 연도 자동 감지: 모든 연도에서 해당 직원 찾기
-  sbFetch('employees?sabun=eq.'+encodeURIComponent(sabun)+'&name=eq.'+encodeURIComponent(name)+'&select=*&order=year.desc').then(function(rows) {
+  sbFetch('employees?sabun=eq.'+encodeURIComponent(sabun)+'&name=eq.'+encodeURIComponent(name)+'&select=*&order=year.desc').then(function(rows){
     if(!rows||rows.length===0){ s('auth-err','이름 또는 사번이 일치하지 않습니다.'); return; }
     CE=rows[0]; CS={}; SD=null; CY=parseInt(CE.year)||2026; CM=6; sigOk=false;
-    return getSubmission(sabun, CE.year).then(function(subs) {
+    return getSubmission(sabun,CE.year).then(function(subs){
       if(subs&&subs.length>0&&subs[0].submitted_at){ renderAlready(); return; }
       renderLeave();
     });
   }).catch(function(e){ s('auth-err','오류: '+e.message); });
 }
 
-function renderAlready() {
+function renderAlready(){
   s('emp-body','<div class="card" style="text-align:center;"><div style="font-size:40px;margin-bottom:8px;">✅</div>'+
     '<h3 style="color:#10b981;">이미 제출 완료되었습니다</h3>'+
     '<p style="color:#6b7280;font-size:13px;margin-top:8px;">인사팀에서 확인 중입니다.<br/>문의사항은 인사팀으로 연락해주세요.</p>'+
     '<button class="btn btn-blue" style="margin-top:12px;" onclick="goHome()">홈으로</button></div>');
 }
 
-function infoCard() {
+function infoCard(){
   var e=CE, p=calcPeriods(e.join_date);
   var rows=[['이름',e.name],['부서',e.dept||'-'],['직급',e.rank||'-'],['입사일',e.join_date||'-'],
     ['발생연차',(e.generated||0)+'일'],['사용연차',(e.used_existing||0)+'일'],['잔여연차',(e.remaining||0)+'일']];
@@ -220,9 +219,8 @@ function infoCard() {
     '<div class="grid2" style="margin-bottom:10px;">'+cells+'</div>'+pt+'</div>';
 }
 
-function noticeCard() {
-  var e=CE, yr=CE.year||'2026';
-  var deadline=yr+'. 7. 10';
+function noticeCard(){
+  var e=CE, yr=CE.year||'2026', deadline=yr+'. 7. 10';
   return '<div class="notice"><p><b>'+e.name+'</b> 님의 통지일 현재 사용가능한 미사용 연차유급휴가일수는 <b style="color:#dc2626;">'+e.remaining+'일</b>임을 알려드립니다.</p>'+
     '<p style="margin-top:8px;"><b>'+deadline+'</b>일까지 미사용 연차유급휴가일수의 사용시기를 지정하여 <b>"미사용 연차유급휴가 사용시기 지정통보서"</b>를 작성하여 주시기 바랍니다.</p>'+
     '<p style="margin-top:8px;">동 기한 내에 제출되지 아니한 경우 관련 규정에 의해 추후 회사가 임의 지정할 예정이며, 그럼에도 불구하고 사용하지 아니한 연차유급휴가일수에 대하여는 향후 <b>연차유급휴가수당이 지급되지 않음</b>을 알려드리니 유념하시기 바랍니다.</p>'+
@@ -232,10 +230,10 @@ function noticeCard() {
     '2. 제1호에 따른 촉구에도 불구하고 근로자가 촉구를 받은 때부터 10일 이내에 사용하지 아니한 휴가의 전부 또는 일부의 사용 시기를 정하여 사용자에게 통보하지 아니하면 제60조제7항 본문에 따른 기간이 끝나기 2개월 전까지 사용자가 사용하지 아니한 휴가의 사용 시기를 정하여 근로자에게 서면으로 통보할 것</div></div>';
 }
 
-function renderLeave() {
+function renderLeave(){
   var used=totalSel(CS), left=+((Number(CE.remaining)||0)-used).toFixed(2);
   var yr=parseInt(CE.year)||2026;
-  s('emp-body', infoCard()+noticeCard()+
+  s('emp-body',infoCard()+noticeCard()+
     '<div class="card">'+
     '<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:8px 12px;margin-bottom:10px;font-size:12px;color:#991b1b;line-height:1.6;">'+
     '※ '+yr+'. 12. 31 전사휴무일입니다. 일괄 연차 소진 될 예정이오니 포함하여 사용시기를 지정해주시기 바랍니다.</div>'+
@@ -256,7 +254,7 @@ function renderLeave() {
   drawCal();
 }
 
-function drawCal() {
+function drawCal(){
   var t=g('cal-title'); if(t) t.textContent=CY+'년 '+(CM+1)+'월';
   var gr=g('cal-grid'); if(!gr) return;
   var dows=['일','월','화','수','목','금','토'];
@@ -266,8 +264,7 @@ function drawCal() {
   for(var d=1;d<=days;d++){
     var dow=new Date(CY,CM,d).getDay(), wk=dow===0||dow===6;
     var ds=CY+'-'+String(CM+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-    var holiday=isHoliday(ds);
-    var disabled=wk||holiday;
+    var holiday=isHoliday(ds), disabled=wk||holiday;
     var v=CS[ds];
     var tag=v?'<span class="day-tag" style="background:'+tc(v)+';">'+tl(v)+'</span>':'';
     var hTag=holiday?'<span style="font-size:9px;color:#D7005A;">휴</span>':'';
@@ -280,7 +277,7 @@ function drawCal() {
 }
 function updCounter(){
   var used=totalSel(CS), left=+((Number(CE.remaining)||0)-used).toFixed(2);
-  var u=g('lbl-used'),l=g('lbl-left');
+  var u=g('lbl-used'), l=g('lbl-left');
   if(u) u.textContent=used+'일';
   if(l){ l.textContent=left+'일'; l.style.color=left<0?'#ef4444':'#10b981'; }
 }
@@ -310,27 +307,45 @@ function pickL(v){
   }
   drawCal(); updCounter();
 }
+
+// ★ 서명 화면 - 동의 체크박스 포함
 function renderSign(){
   s('emp-body','<div class="card">'+
     '<button class="btn-sm" style="margin-bottom:12px;" onclick="renderLeave()">← 날짜 수정</button>'+
-    '<h3 style="margin-bottom:8px;font-size:15px;">서명</h3>'+
+    '<h3 style="margin-bottom:8px;font-size:15px;">✍️ 전자서명</h3>'+
     '<p style="font-size:13px;color:#6b7280;margin-bottom:4px;">아래 박스에 마우스로 서명해주세요.</p>'+
     '<p style="font-size:12px;color:#ef4444;margin-bottom:10px;">※ 본인 성명을 정자로 서명해주세요.</p>'+
-    '<canvas id="sig-c" class="sig-canvas" width="320" height="100"></canvas>'+
-    '<button class="btn-sm" style="margin-top:6px;" onclick="clearSig()">지우기</button>'+
-    '<button class="btn btn-blue btn-block" style="margin-top:14px;" onclick="goConfirm()">완료 →</button></div>');
+    '<canvas id="sig-c" class="sig-canvas" width="460" height="110"></canvas>'+
+    '<button class="btn-sm" style="margin-top:6px;" onclick="clearSig()">🔄 지우기</button>'+
+    // ★ 동의 체크박스
+    '<div class="agree-box">'+
+    '<div class="agree-title">📋 전자서명 동의</div>'+
+    '<label>'+
+    '<input type="checkbox" id="chk-agree"/>'+
+    '<span>본인은 위와 같이 미사용 연차유급휴가 사용시기를 지정하였으며, 본 전자서명이 자필서명과 동일한 법적 효력을 가짐을 확인하고 이에 동의합니다.</span>'+
+    '</label>'+
+    '</div>'+
+    '<button class="btn btn-blue btn-block" style="margin-top:4px;" onclick="goConfirm()">완료 →</button></div>');
   initSig();
 }
+
 function initSig(){
   var c=g('sig-c'); if(!c) return; SD=null; sigOk=false;
   var ctx=c.getContext('2d'), drawing=false;
   function pos(e){ var r=c.getBoundingClientRect(),src=e.touches?e.touches[0]:e; return [src.clientX-r.left,src.clientY-r.top]; }
   c.onmousedown=c.ontouchstart=function(e){ e.preventDefault(); drawing=true; var p=pos(e); ctx.beginPath(); ctx.moveTo(p[0],p[1]); };
-  c.onmousemove=c.ontouchmove=function(e){ e.preventDefault(); if(!drawing)return; var p=pos(e); ctx.lineWidth=2; ctx.strokeStyle='#000000'; ctx.lineCap='round'; ctx.lineTo(p[0],p[1]); ctx.stroke(); };
+  c.onmousemove=c.ontouchmove=function(e){ e.preventDefault(); if(!drawing)return; var p=pos(e); ctx.lineWidth=2; ctx.strokeStyle='#000'; ctx.lineCap='round'; ctx.lineTo(p[0],p[1]); ctx.stroke(); };
   c.onmouseup=c.onmouseleave=c.ontouchend=function(e){ e.preventDefault(); drawing=false; SD=c.toDataURL(); sigOk=true; };
 }
-function clearSig(){ var c=g('sig-c'); if(c){ c.getContext('2d').clearRect(0,0,c.width,c.height); SD=null; sigOk=false; } }
-function goConfirm(){ if(!sigOk||!SD){ alert('서명을 먼저 해주세요.'); return; } renderConfirm(); }
+function clearSig(){ var c=g('sig-c'); if(!c) return; c.getContext('2d').clearRect(0,0,c.width,c.height); SD=null; sigOk=false; }
+
+function goConfirm(){
+  var chk=g('chk-agree');
+  if(!chk||!chk.checked){ alert('전자서명 동의 체크박스를 확인해주세요.'); return; }
+  if(!sigOk||!SD){ alert('서명을 먼저 해주세요.'); return; }
+  renderConfirm();
+}
+
 function renderConfirm(){
   var used=totalSel(CS), byM={};
   Object.entries(CS).sort(function(a,b){ return a[0].localeCompare(b[0]); }).forEach(function(kv){
@@ -355,12 +370,24 @@ function renderConfirm(){
     '<button class="btn btn-gray" style="flex:1;" onclick="renderSign()">← 수정</button>'+
     '<button class="btn btn-green" style="flex:2;" onclick="doSubmit()">✅ 최종 제출</button></div></div>');
 }
+
 function doSubmit(){
   var used=totalSel(CS);
-  var data={sabun:CE.sabun, year:CE.year, name:CE.name, dept:CE.dept||'', rank:CE.rank||'',
+  var now=new Date().toISOString();
+  var ci=getClientInfo(); // ★ 접속 정보
+  var data={
+    sabun:CE.sabun, year:CE.year, name:CE.name, dept:CE.dept||'', rank:CE.rank||'',
     join_date:CE.join_date||'', generated:Number(CE.generated)||0,
     used_existing:Number(CE.used_existing)||0, remaining:Number(CE.remaining)||0,
-    selections:CS, total_selected:used, signature:SD, submitted_at:new Date().toISOString()};
+    selections:CS, total_selected:used, signature:SD,
+    submitted_at:now,
+    // ★ 부인방지 정보
+    agreed_at:now,
+    client_user_agent:ci.user_agent,
+    client_screen:ci.screen,
+    client_lang:ci.lang,
+    client_platform:ci.platform
+  };
   s('emp-body','<div class="loading">제출 중...</div>');
   upsertSubmission(data).then(function(){
     s('emp-body','<div class="card" style="text-align:center;"><div style="font-size:44px;margin-bottom:8px;">✅</div>'+
@@ -389,14 +416,10 @@ function doLogin(){
   else s('pw-err','비밀번호가 틀렸습니다.');
 }
 
-// 연도 선택 화면
 function renderYearSelect(){
-  var curYear=new Date().getFullYear();
-  var years=[];
-  for(var y=curYear+1; y>=2024; y--) years.push(y);
-  var opts=years.map(function(y){
-    return '<option value="'+y+'"'+(y==adminYear?' selected':'')+'>'+y+'년</option>';
-  }).join('');
+  var curYear=new Date().getFullYear(), years=[];
+  for(var y=curYear+1;y>=2024;y--) years.push(y);
+  var opts=years.map(function(y){ return '<option value="'+y+'"'+(y==adminYear?' selected':'')+'>'+y+'년</option>'; }).join('');
   s('admin-body','<div class="card" style="max-width:400px;margin:20px auto;">'+
     '<h3 style="margin-bottom:14px;font-size:15px;">📅 관리 연도 선택</h3>'+
     '<select id="sel-year" style="margin-bottom:14px;">'+opts+'</select>'+
@@ -457,8 +480,19 @@ function openDetail(sabun){
     var info=[['부서',sub.dept],['직급',sub.rank||emp.rank||'-'],
       ['발생연차',(sub.generated||0)+'일'],['기사용연차',(sub.used_existing||0)+'일'],
       ['잔여연차',(sub.remaining||0)+'일'],['지정일수',(sub.total_selected||0)+'일'],
-      ['제출일',new Date(sub.submitted_at).toLocaleDateString('ko-KR')]];
+      ['제출일시',new Date(sub.submitted_at).toLocaleString('ko-KR')],
+      ['동의일시',sub.agreed_at?new Date(sub.agreed_at).toLocaleString('ko-KR'):'-']]; // ★
     var infoHtml=info.map(function(r){ return '<div class="cell" style="background:#f8fafc;border-radius:6px;padding:7px 10px;"><span>'+r[0]+'</span><b>'+r[1]+'</b></div>'; }).join('');
+    // ★ 접속 정보 표시
+    var clientHtml='';
+    if(sub.client_user_agent){
+      clientHtml='<div style="background:#f1f5f9;border-radius:8px;padding:10px 12px;margin-top:12px;font-size:11px;color:#6b7280;line-height:1.8;">'+
+        '<b style="color:#374151;">📡 접속 정보 (부인방지)</b><br/>'+
+        '브라우저: '+sub.client_user_agent+'<br/>'+
+        '화면해상도: '+(sub.client_screen||'-')+'<br/>'+
+        '언어: '+(sub.client_lang||'-')+'<br/>'+
+        '플랫폼: '+(sub.client_platform||'-')+'</div>';
+    }
     s('admin-body',tabBar()+'<div class="card">'+
       '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">'+
       '<button class="btn-sm" onclick="curDetailSabun=null;renderStatus()">← 목록</button>'+
@@ -469,7 +503,8 @@ function openDetail(sabun){
       '<div style="margin-bottom:12px;">'+(chips||'<p style="color:#9ca3af;font-size:12px;">선택 없음</p>')+'</div>'+
       (sub.signature?'<h4 style="font-size:13px;margin-bottom:6px;">서명</h4>'+
       '<div style="border:1px solid #e5e7eb;border-radius:8px;padding:8px;display:inline-block;background:#fafafa;">'+
-      '<img src="'+sub.signature+'" width="240" height="80"/></div>':'')+'</div>');
+      '<img src="'+sub.signature+'" width="240" height="80"/></div>':'')+
+      clientHtml+'</div>');
   }).catch(function(e){ alert('오류: '+e.message); });
 }
 
@@ -484,8 +519,7 @@ function doPrint(sabun){
       var m=parseInt(kv[0].split('-')[1]); if(!byM[m]) byM[m]=[]; byM[m].push({d:kv[0],v:kv[1]});
     });
     function mc(m){ return (byM[m]||[]).map(function(x){ return x.d.split('-')[2]+'일('+tl(x.v)+')'; }).join(', ')||''; }
-    var dt=new Date(sub.submitted_at);
-    var yr=adminYear;
+    var dt=new Date(sub.submitted_at), yr=adminYear;
     var html='<!DOCTYPE html><html><head><meta charset="utf-8">'+
 '<style>*{box-sizing:border-box;margin:0;padding:0;}@page{size:A4;margin:12mm 15mm;}'+
 'body{font-family:\'Malgun Gothic\',sans-serif;font-size:11.5px;color:#111;}'+
@@ -496,7 +530,8 @@ function doPrint(sabun){
 '.sig{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-top:8px;}'+
 '.logo{text-align:center;margin-top:10px;font-size:17px;font-weight:900;letter-spacing:2px;}'+
 '.sec{text-align:center;font-size:13px;font-weight:700;margin:10px 0 7px;border-top:2px solid #111;border-bottom:1px solid #111;padding:4px 0;}'+
-'hr{border:none;border-top:1px dashed #aaa;margin:8px 0;}</style></head><body>'+
+'hr{border:none;border-top:1px dashed #aaa;margin:8px 0;}'+
+'.agree-note{font-size:9px;color:#555;border:1px solid #ccc;border-radius:4px;padding:4px 7px;margin-top:6px;background:#f9f9f9;}</style></head><body>'+
 '<h2>☑ 미사용 연차유급휴가일수 통지<br>☑ 휴가사용 시기지정 통보 촉구</h2>'+
 '<p style="text-align:center;font-size:10px;color:#666;margin-bottom:8px;">[ 관련법령 : 근로기준법 제61조의 2항 ]</p>'+
 '<table><tr><th style="width:60px">성 명</th><td style="text-align:left;padding-left:8px;">'+sub.name+'</td>'+
@@ -529,6 +564,7 @@ function doPrint(sabun){
 '<tr><td>9월</td><td style="text-align:left;padding-left:6px;">'+mc(9)+'</td><td>12월</td><td style="text-align:left;padding-left:6px;">'+mc(12)+'</td></tr></table>'+
 '<p style="text-align:center;margin:10px 0 5px;">'+yr+'년 &nbsp; '+(dt.getMonth()+1)+'월 &nbsp; '+dt.getDate()+'일</p>'+
 '<div class="sig"><span>상기본인</span><img src="'+sub.signature+'" width="100" height="42" style="border:1px solid #ccc;border-radius:4px;"/><span>(인)</span></div>'+
+
 '<div class="logo">ATEC 에이텍컴퓨터</div></body></html>';
     var w=window.open('','_blank'); w.document.write(html); w.document.close(); setTimeout(function(){ w.print(); },600);
   }).catch(function(e){ alert('오류: '+e.message); });
